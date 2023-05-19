@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
 import { CommandsUpdate } from './commands.update';
+import { userCommands } from './user/user';
 
 @Module({
-  providers: [CommandsUpdate],
+  providers: [CommandsUpdate, ...userCommands],
 })
-export class CommandsModule {}
+export class CommandsModule { }

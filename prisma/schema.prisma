@@ -1,0 +1,54 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int      @id @default(autoincrement())
+  userId BigInt @unique
+  isAdmin Boolean @default(false)
+  playlists Playlist[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model Playlist {
+  id Int @id @default(autoincrement())
+  ownerId BigInt
+  owner User @relation(fields: [ownerId],references: [userId],onDelete: Cascade,onUpdate: Cascade)
+  tracks TrackOnPlaylist[]
+  slug String @db.VarChar(70) @unique
+  likes Int @db.Int @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Track {
+  id Int @id @default(autoincrement())
+  uniqueId String @unique
+  title String
+  performer String
+  file_unique_id String @unique
+  file_id String
+  playlists TrackOnPlaylist[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TrackOnPlaylist {
+  id Int @id @default(autoincrement())
+  playlistId Int
+  playlist Playlist @relation(fields: [playlistId],references: [id],onUpdate: Cascade,onDelete: Cascade)
+  trackId Int
+  track Track @relation(fields: [trackId],references: [id],onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
