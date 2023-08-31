@@ -7,10 +7,13 @@ import { Context } from '../shared/interfaces/context.interface';
 import { RedisService } from '../../redis/redis.service';
 import { Audio } from 'telegraf/types';
 import { TrackRepository } from './repositories/track.repository';
-import { Playlist } from '../shared/interfaces/playlist.interface';
+import {
+  Playlist,
+  PlaylistWithTracks,
+} from '../shared/interfaces/playlist.interface';
 import { getRandomString } from '../../../shared/utils/random.util';
-import { inlineCbKeys } from '../shared/constants/callbacks.constant';
 import { InlineKeyboardButton } from '../shared/interfaces/keyboard.interface';
+import { getShowPlaylistMsg } from './messages/showPlaylist.msg';
 @Injectable()
 export class PlaylistService {
   constructor(
@@ -23,29 +26,21 @@ export class PlaylistService {
     { playlistName, senderId }: { playlistName: string; senderId: number },
   ) {
     const uuId = crypto.randomUUID().slice(0, 8);
-    await this.playlistRepo.create({
+    const playlist = await this.playlistRepo.create({
       slug: uuId,
       name: playlistName,
       ownerId: senderId,
     });
-    await ctx.reply(
-      `• پلی لیست به نام  <u> ${playlistName}  </u>  و ایدی <code>${uuId}</code> ساخته شد.
-↲ آمار بازدید: 0
-↲ آمار لایک: 0
-↲ تعداد محتوا: 0
-↲ وضعیت مشاهده: عمومی
-
-یک گزینه رو انتخاب کنید:
-`,
-      {
-        parse_mode: 'HTML',
-        reply_markup: {
-          inline_keyboard: playlistKeyboard,
-          selective: true,
-          one_time_keyboard: true,
-        },
+    // @ts-ignore
+    playlist.tracks = [];
+    await ctx.reply(getShowPlaylistMsg(playlist as any), {
+      parse_mode: 'HTML',
+      reply_markup: {
+        inline_keyboard: playlistKeyboard(uuId),
+        selective: true,
+        one_time_keyboard: true,
       },
-    );
+    });
   }
 
   async addTrack(
@@ -81,8 +76,28 @@ export class PlaylistService {
     return playlists.map((pl) => [
       {
         text: `${pl.isPrivate ? '🔐' : '🔓'}〡${pl.name}〡${pl.slug}`,
-        callback_data: `playlist:${pl.slug}`,
+        callback_data: `show_playlist:${pl.slug}`,
       },
     ]);
+  }
+
+  async showPlaylist(ctx: Context, playlistSlug: string) {
+    const playlist: PlaylistWithTracks | null =
+      await this.playlistRepo.findbySlug(playlistSlug, true);
+    if (!playlist)
+      return {
+        text: `پلی لیست معتبر نیست`,
+      };
+    return {
+      text: getShowPlaylistMsg(playlist),
+      args: {
+        parse_mode: 'HTML',
+        reply_markup: {
+          inline_keyboard: playlistKeyboard(playlist.slug),
+          selective: true,
+          one_time_keyboard: true,
+        },
+      },
+    };
   }
 }

@@ -3,6 +3,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import {
   Playlist,
   PlaylistCreateInput,
+  PlaylistWithTracks,
 } from '../shared/interfaces/playlist.interface';
 
 @Injectable()
@@ -12,10 +13,16 @@ export class PlaylistRepository {
   create(input: PlaylistCreateInput): Promise<Playlist> {
     return this.db.playlist.create({ data: input });
   }
-  findbySlug(slug: string): Promise<Playlist | null> {
+  findbySlug(
+    slug: string,
+    inclueTracks = false,
+  ): Promise<PlaylistWithTracks | null> {
     return this.db.playlist.findUnique({
       where: {
         slug,
+      },
+      include: {
+        tracks: inclueTracks,
       },
     });
   }
