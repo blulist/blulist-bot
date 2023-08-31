@@ -1,4 +1,4 @@
-import { Action, Ctx, Update } from 'nestjs-telegraf';
+import { Action, Ctx, Sender, Update } from 'nestjs-telegraf';
 
 import { inlineCbKeys } from '../shared/constants/callbacks.constant';
 import { Context } from '../shared/interfaces/context.interface';
@@ -28,5 +28,21 @@ export class PlaylistUpdate {
       rediskey,
     );
     await ctx.editMessageText(result, { parse_mode: 'HTML' });
+  }
+
+  @Action(inlineCbKeys.MY_PLAYLISTS)
+  async onMyPlayLists(@Ctx() ctx: Context, @Sender('id') id: number) {
+    const keyboards = await this.playlistService.myPlaylists(ctx, id);
+    await ctx.editMessageText(
+      `
+تعداد پلی لیست ها: ${keyboards.length}
+یک پلی لیست رو جهت مدیریت انتخاب کنید:
+    `,
+      {
+        reply_markup: {
+          inline_keyboard: keyboards,
+        },
+      },
+    );
   }
 }

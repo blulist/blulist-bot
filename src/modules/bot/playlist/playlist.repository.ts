@@ -19,4 +19,11 @@ export class PlaylistRepository {
       },
     });
   }
+  findAllAUser(userId: number): Promise<Array<Playlist>> {
+    return this.db.playlist.findMany({
+      where: {
+        ownerId: userId,
+      },
+    });
+  }
 }

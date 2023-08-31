@@ -9,6 +9,8 @@ import { Audio } from 'telegraf/types';
 import { TrackRepository } from './repositories/track.repository';
 import { Playlist } from '../shared/interfaces/playlist.interface';
 import { getRandomString } from '../../../shared/utils/random.util';
+import { inlineCbKeys } from '../shared/constants/callbacks.constant';
+import { InlineKeyboardButton } from '../shared/interfaces/keyboard.interface';
 @Injectable()
 export class PlaylistService {
   constructor(
@@ -28,9 +30,10 @@ export class PlaylistService {
     });
     await ctx.reply(
       `• پلی لیست به نام  <u> ${playlistName}  </u>  و ایدی <code>${uuId}</code> ساخته شد.
-- آمار بازدید: 0
-- آمار لایک: 0
-- تعداد محتوا: 0
+↲ آمار بازدید: 0
+↲ آمار لایک: 0
+↲ تعداد محتوا: 0
+↲ وضعیت مشاهده: عمومی
 
 یک گزینه رو انتخاب کنید:
 `,
@@ -67,5 +70,19 @@ export class PlaylistService {
       uniqueId: getRandomString(10),
     });
     return ` ✅ فایل <code>${track.performer}</code> با موفقیت به پلی لیست <u>${playlist.name}</u> با ایدی <code>${playlist.slug}</code> اضافه شد.`;
+  }
+
+  async myPlaylists(
+    ctx: Context,
+    userId: number,
+  ): Promise<InlineKeyboardButton[][]> {
+    const playlists = await this.playlistRepo.findAllAUser(userId);
+
+    return playlists.map((pl) => [
+      {
+        text: `${pl.isPrivate ? '🔐' : '🔓'}〡${pl.name}〡${pl.slug}`,
+        callback_data: `playlist:${pl.slug}`,
+      },
+    ]);
   }
 }
