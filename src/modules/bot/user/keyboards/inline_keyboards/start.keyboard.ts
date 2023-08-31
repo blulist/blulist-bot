@@ -9,5 +9,9 @@ export const startKeyboard: InlineKeyboardButton[][] = [
       callback_data: inlineCbKeys.CREATE_PLAYLIST,
     },
   ],
-  [{ text: '📺 آموزش', callback_data: 'test' }],
+  [{ text: '🔎 اکسپلور', callback_data: 'explore' }],
+  [
+    { text: 'گیت هاب', url: 'https://github.com/sajjadmrx' },
+    { text: '📺 آموزش', callback_data: 'test' },
+  ],
 ];

@@ -1,5 +1,5 @@
 export enum inlineCbKeys {
   CREATE_PLAYLIST = 'CREATE_PLAYLIST',
-  EDIT_PLAYLIST_NAME = 'edit_playlist_name',
+  EDIT_PLAYLIST = 'edit_playlist',
   ADD_MUSIC = 'add_music',
 }
