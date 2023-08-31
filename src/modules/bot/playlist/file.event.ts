@@ -7,7 +7,7 @@ import { PrismaClient } from '@prisma/client';
 import { InlineKeyboardButton } from '../shared/interfaces/keyboard.interface';
 
 @Update()
-export class AudioEvent {
+export class FileEvent {
   constructor(private redis: RedisService) {}
   @On('audio')
   async onSendAudio(@Ctx() ctx: Context, @Message('audio') audio: any) {
@@ -39,4 +39,22 @@ export class AudioEvent {
       },
     );
   }
+
+  // @On('photo')
+  // onPhoto(@Ctx() ctx: Context, @Message('photo') photo) {
+  //   // [
+  //   //   {
+  //   //     file_id: 'AgACAgQAAxkBAAIBpGTw7SppYkM-a02cFUVW8s2Cl-EVAAJgvzEbjMWJU6HZMBRD_yo5AQADAgADcwADMAQ',
+  //   //     file_unique_id: 'AQADYL8xG4zFiVN4',
+  //   //     file_size: 891,
+  //   //     width: 90,
+  //   //     height: 55
+  //   //   },
+  //   //   {
+  //   //     file_id: 'AgACAgQAAxkBAAIBpGTw7SppYkM-a02cFUVW8s2Cl-EVAAJgvzEbjMWJU6HZMBRD_yo5AQADAgADbQADMAQ',
+  //   //     file_unique_id: 'AQADYL8xG4zFiVNy',
+  //   //     file_size: 10483,
+  //   //     width: 320,
+  //   //   } ]
+  // }
 }

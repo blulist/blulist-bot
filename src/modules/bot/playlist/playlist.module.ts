@@ -3,7 +3,7 @@ import { PlaylistUpdate } from './playlist.update';
 import { SendPlnameScenes } from './scenes/send-plname.scenes';
 import { PlaylistRepository } from './playlist.repository';
 import { PlaylistService } from './playlist.service';
-import { AudioEvent } from './audio.event';
+import { FileEvent } from './file.event';
 import { TrackRepository } from './repositories/track.repository';
 
 @Module({
@@ -12,7 +12,7 @@ import { TrackRepository } from './repositories/track.repository';
     SendPlnameScenes,
     PlaylistRepository,
     PlaylistService,
-    AudioEvent,
+    FileEvent,
     TrackRepository,
   ],
 })
