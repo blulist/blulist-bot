@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PlaylistRepository } from './playlist.repository';
 import * as crypto from 'crypto';
 
-import { playlistButton } from './keyboards/inline_keyboards/playlist.button';
+import { playlistKeyboard } from './keyboards/inline_keyboards/playlist.keyboard';
 import { Context } from '../shared/interfaces/context.interface';
 
 @Injectable()
@@ -29,7 +29,7 @@ export class PlaylistService {
       {
         parse_mode: 'HTML',
         reply_markup: {
-          inline_keyboard: playlistButton,
+          inline_keyboard: playlistKeyboard,
           selective: true,
           one_time_keyboard: true,
         },
