@@ -13,9 +13,9 @@ import { RedisModule } from './modules/redis/redis.module';
     }),
     BotModule,
     PrismaModule,
-    RedisModule
+    RedisModule,
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule { }
+export class AppModule {}

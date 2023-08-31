@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TelegrafModule } from 'nestjs-telegraf';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { CommandsModule } from './commands/commands.module';
-import { EventsModule } from './events/events.module';
+
 import { AuthMiddleware } from './shared/middlewares/auth.middleware';
+import { UserModule } from './user/user.module';
+import { PlaylistModule } from './playlist/playlist.module';
+import { SessionMiddleware } from './shared/middlewares/session.middleware';
 
 @Module({
   imports: [
@@ -15,13 +17,13 @@ import { AuthMiddleware } from './shared/middlewares/auth.middleware';
           dropPendingUpdates: true,
         },
 
-        middlewares: [AuthMiddleware],
+        middlewares: [AuthMiddleware, SessionMiddleware],
       }),
       inject: [ConfigService],
     }),
-    CommandsModule,
-    EventsModule,
+    UserModule,
+    PlaylistModule,
   ],
   providers: [],
 })
-export class BotModule { }
+export class BotModule {}
