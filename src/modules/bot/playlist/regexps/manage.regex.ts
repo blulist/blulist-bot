@@ -14,6 +14,9 @@ export const editPlaylistStatusRegex = new RegExp(
   `^${inlineCbKeys.TOGGLE_PLAYLIST_STATUS}:(.*)$`,
 );
 export const backToMainPlaylistRegex = new RegExp(`backTo:mainPlaylist:(.*)$`);
-export const showMyPlaylistFiles = new RegExp(
+export const showMyPlaylistFilesRegex = new RegExp(
   `^${inlineCbKeys.SHOW_MY_FILES}:(.*)$`,
+);
+export const sharePlaylistRegex = new RegExp(
+  `^${inlineCbKeys.SHARE_PLAYLIST}:(.*)$`,
 );

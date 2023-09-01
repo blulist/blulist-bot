@@ -9,7 +9,8 @@ import {
   editPlaylistNameRegex,
   editPlaylistStatusRegex,
   editPlaylistRegex,
-  showMyPlaylistFiles,
+  showMyPlaylistFilesRegex,
+  sharePlaylistRegex,
 } from '../regexps/manage.regex';
 import { UseGuards } from '@nestjs/common';
 import { CheckPlaylistGuard } from '../../shared/guards/checkplaylist.guard';
@@ -79,9 +80,36 @@ export class ManagePlaylistUpdate {
     return this.playlistService.toggleStatus(ctx);
   }
 
-  @Action(showMyPlaylistFiles)
+  @Action(showMyPlaylistFilesRegex)
   @UseGuards(CheckPlaylistGuard)
   async onShowMyPlaylistFiles(@Ctx() ctx: Context) {
     return this.playlistService.showMyPlaylistFiles(ctx);
+  }
+
+  @Action(sharePlaylistRegex)
+  async onSharePlaylist(@Ctx() ctx: Context) {
+    await ctx.answerCbQuery();
+    const slug = ctx.match[1];
+    await ctx.sendMessage(
+      `
+• خیلی خوشحالیم که پلتفرم مارو انتخاب کرده اید ! 😍
+برای اشتراک گذاری پلی لیـست کافیه یکی از لینک های زیر رو به دوستان یا در پلفترم های مختلف به اشتراک بگذارید:
+
+▸ x(twitter): <code>https://t.me/p7ify_bot?start=${slug}_x</code>
+▸ instagram: <code>https://t.me/p7ify_bot?start=${slug}_insta</code>
+▸ telegram: <code>https://t.me/p7ify_bot?start=${slug}_telegram</code>
+
+و غیره:
+<code>https://t.me/p7ify_bot?start=${slug}</code>
+
+❕ جهت کپی روی یکی از لینک ها کلیک کنید.
+
+🐳 BluList - بلـولیـست
+@bluListBot
+    `,
+      {
+        parse_mode: 'HTML',
+      },
+    );
   }
 }

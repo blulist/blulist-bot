@@ -18,7 +18,7 @@ export const playlistKeyboard = (
     [
       {
         text: '🖇️ اشتراک گذاری',
-        callback_data: 'shere_playlist',
+        callback_data: inlineCbKeys.SHARE_PLAYLIST + `:${playlistSlug}`,
       },
       {
         text: 'آمار',
