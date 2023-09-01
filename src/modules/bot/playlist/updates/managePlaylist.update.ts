@@ -1,18 +1,19 @@
 import { Action, Ctx, Message, Sender, Update } from 'nestjs-telegraf';
 
-import { inlineCbKeys } from '../shared/constants/callbacks.constant';
-import { Context } from '../shared/interfaces/context.interface';
-import { PlaylistService } from './playlist.service';
-import { editPlaylistKeyboard } from './keyboards/inline_keyboards/playlist.keyboard';
+import { inlineCbKeys } from '../../shared/constants/callbacks.constant';
+import { Context } from '../../shared/interfaces/context.interface';
+import { ManagePlaylistService } from '../services/manage-playlist.service';
+import { editPlaylistKeyboard } from '../keyboards/inline_keyboards/playlist.keyboard';
 import {
   editPlaylistBannerRegex,
   editPlaylistNameRegex,
+  editPlaylistStatusRegex,
   editPlaylistRegex,
-} from './regexps/manage.regex';
+} from '../regexps/manage.regex';
 
 @Update()
 export class ManagePlaylistUpdate {
-  constructor(private playlistService: PlaylistService) {}
+  constructor(private playlistService: ManagePlaylistService) {}
 
   @Action(inlineCbKeys.CREATE_PLAYLIST)
   async onCreatePlaylist(@Ctx() ctx: Context) {
@@ -89,5 +90,11 @@ export class ManagePlaylistUpdate {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     ctx.scene.session.msgId = ctx.update.callback_query.message.message_id;
+  }
+
+  @Action(editPlaylistStatusRegex)
+  async onEditToggleStatus(@Ctx() ctx: Context) {
+    const playlistSlug = ctx.match[1] as string;
+    return this.playlistService.toggleStatus(ctx, playlistSlug);
   }
 }

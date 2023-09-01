@@ -51,9 +51,14 @@ export const editPlaylistKeyboard = (
     [
       {
         text: '👀 تغییر وضعیت',
-        callback_data: 'test',
+        callback_data: inlineCbKeys.TOGGLE_PLAYLIST_STATUS + `:${playlistSlug}`,
       },
     ],
-    [{ text: '> بازگشت', callback_data: 'back:show_playlist:xx' }],
+    [
+      {
+        text: '> بازگشت',
+        callback_data: `backTo:mainPlaylist:${playlistSlug}`,
+      },
+    ],
   ];
 };

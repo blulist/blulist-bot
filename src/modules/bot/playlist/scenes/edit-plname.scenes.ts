@@ -1,10 +1,10 @@
 import { Ctx, Message, On, Scene, SceneEnter, Sender } from 'nestjs-telegraf';
 import { Context } from '../../shared/interfaces/context.interface';
-import { PlaylistService } from '../playlist.service';
+import { ManagePlaylistService } from '../services/manage-playlist.service';
 
 @Scene('enter_your_new_name')
 export class EditPlnameScenes {
-  constructor(private playlistService: PlaylistService) {}
+  constructor(private playlistService: ManagePlaylistService) {}
 
   @SceneEnter()
   async onEnter(ctx: Context) {

@@ -5,4 +5,5 @@ export enum inlineCbKeys {
   MY_PLAYLISTS = 'my_playlists',
   EDIT_PLAYLIST_NAME = 'editPlaylist_name',
   EDIT_PLAYLIST_BANNER = 'editPlaylist_banner',
+  TOGGLE_PLAYLIST_STATUS = 'toggleStatus',
 }

@@ -1,10 +1,10 @@
 import { Ctx, Message, On, Scene, Sender } from 'nestjs-telegraf';
 import { Context } from '../../shared/interfaces/context.interface';
-import { PlaylistService } from '../playlist.service';
+import { ManagePlaylistService } from '../services/manage-playlist.service';
 
 @Scene('send_playlist_name')
 export class SendPlnameScenes {
-  constructor(private playlistService: PlaylistService) {}
+  constructor(private playlistService: ManagePlaylistService) {}
 
   @On('text')
   async onText(

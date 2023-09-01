@@ -1,21 +1,24 @@
 import { Injectable } from '@nestjs/common';
-import { PlaylistRepository } from './playlist.repository';
+import { PlaylistRepository } from '../playlist.repository';
 import * as crypto from 'crypto';
 
-import { playlistKeyboard } from './keyboards/inline_keyboards/playlist.keyboard';
-import { Context } from '../shared/interfaces/context.interface';
-import { RedisService } from '../../redis/redis.service';
+import {
+  editPlaylistKeyboard,
+  playlistKeyboard,
+} from '../keyboards/inline_keyboards/playlist.keyboard';
+import { Context } from '../../shared/interfaces/context.interface';
+import { RedisService } from '../../../redis/redis.service';
 import { Audio } from 'telegraf/types';
-import { TrackRepository } from './repositories/track.repository';
+import { TrackRepository } from '../repositories/track.repository';
 import {
   Playlist,
   PlaylistWithTracks,
-} from '../shared/interfaces/playlist.interface';
-import { getRandomString } from '../../../shared/utils/random.util';
-import { InlineKeyboardButton } from '../shared/interfaces/keyboard.interface';
-import { getShowPlaylistMsg } from './messages/showPlaylist.msg';
+} from '../../shared/interfaces/playlist.interface';
+import { getRandomString } from '../../../../shared/utils/random.util';
+import { InlineKeyboardButton } from '../../shared/interfaces/keyboard.interface';
+import { getShowPlaylistMsg } from '../messages/showPlaylist.msg';
 @Injectable()
-export class PlaylistService {
+export class ManagePlaylistService {
   constructor(
     private playlistRepo: PlaylistRepository,
     private redisService: RedisService,
@@ -151,5 +154,37 @@ export class PlaylistService {
     // @ts-ignore
     await ctx.deleteMessage(ctx.scene.session.msgId);
     await ctx.scene.leave();
+  }
+
+  async toggleStatus(ctx: Context, playlistSlug: string) {
+    let playlist: PlaylistWithTracks = await this.playlistRepo.findbySlug(
+      playlistSlug,
+    );
+    playlist = await this.playlistRepo.updateBySlug(playlistSlug, {
+      isPrivate: !playlist.isPrivate,
+    });
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const photo = ctx.callbackQuery.message.photo;
+
+    if (photo && photo.length) {
+      await ctx.editMessageCaption(getShowPlaylistMsg(playlist), {
+        parse_mode: 'HTML',
+        reply_markup: {
+          inline_keyboard: editPlaylistKeyboard(playlistSlug),
+        },
+      });
+    } else
+      await ctx.editMessageText(getShowPlaylistMsg(playlist), {
+        parse_mode: 'HTML',
+        reply_markup: {
+          inline_keyboard: editPlaylistKeyboard(playlistSlug),
+        },
+      });
+    await ctx.answerCbQuery(
+      `وضعیت مشاهده به ${
+        playlist.isPrivate ? '🔐 خصوصی' : '🔓 عمومی'
+      } تغییر کرد. `,
+    );
   }
 }

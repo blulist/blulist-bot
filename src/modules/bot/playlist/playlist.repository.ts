@@ -34,6 +34,9 @@ export class PlaylistRepository {
         slug,
       },
       data: input,
+      include: {
+        tracks: true,
+      },
     });
   }
   findAllAUser(userId: number): Promise<Array<Playlist>> {
