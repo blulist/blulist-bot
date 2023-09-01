@@ -4,7 +4,7 @@ import { Context } from '../shared/interfaces/context.interface';
 import { RedisService } from '../../redis/redis.service';
 import { getRandomString } from '../../../shared/utils/random.util';
 import { InlineKeyboardButton } from '../shared/interfaces/keyboard.interface';
-import { PlaylistRepository } from './repositories/playlist.repository';
+import { PlaylistRepository } from '../playlist/playlist.repository';
 
 @Update()
 export class FileEvent {

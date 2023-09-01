@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../../prisma/prisma.service';
+import { PrismaService } from '../../prisma/prisma.service';
 import {
   Playlist,
   PlaylistCreateInput,
   PlaylistUpdateInput,
   PlaylistWithTracks,
-} from '../../shared/interfaces/playlist.interface';
+} from '../shared/interfaces/playlist.interface';
 
 @Injectable()
 export class PlaylistRepository {

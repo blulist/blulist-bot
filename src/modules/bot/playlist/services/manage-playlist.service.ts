@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PlaylistRepository } from '../repositories/playlist.repository';
+import { PlaylistRepository } from '../playlist.repository';
 import * as crypto from 'crypto';
 
 import {
@@ -9,7 +9,7 @@ import {
 import { Context } from '../../shared/interfaces/context.interface';
 import { RedisService } from '../../../redis/redis.service';
 import { Audio } from 'telegraf/types';
-import { TrackRepository } from '../repositories/track.repository';
+import { TrackRepository } from '../../track/track.repository';
 import {
   Playlist,
   PlaylistWithTracks,
@@ -198,7 +198,10 @@ export class ManagePlaylistService {
 
     await ctx.deleteMessage();
     const buttons: InlineKeyboardButton[][] = files.map((f) => [
-      { text: `${f.title} • ${f.performer}`, callback_data: 'test' },
+      {
+        text: `${f.title} • ${f.performer}`,
+        callback_data: `selectTrack:${ctx.playlist.slug}:${f.uniqueId}`,
+      },
     ]);
     buttons.unshift([
       {
@@ -207,10 +210,16 @@ export class ManagePlaylistService {
       },
       { text: 'ارسال همه', callback_data: 'test' },
     ]);
-    await ctx.sendMessage(`فایل های پلی لیست ${ctx.playlist.name}`, {
-      reply_markup: {
-        inline_keyboard: buttons,
+    await ctx.sendMessage(
+      `فایل های پلی لیست <b>${ctx.playlist.name}</b> با ایدی <code>${ctx.playlist.slug}</code>
+لطفا یک گزینه رو انتخاب کنید:
+`,
+      {
+        parse_mode: 'HTML',
+        reply_markup: {
+          inline_keyboard: buttons,
+        },
       },
-    });
+    );
   }
 }

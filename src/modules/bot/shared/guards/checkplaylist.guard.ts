@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { TelegrafException, TelegrafExecutionContext } from 'nestjs-telegraf';
 import { Context } from '../interfaces/context.interface';
-import { PlaylistRepository } from '../../playlist/repositories/playlist.repository';
+import { PlaylistRepository } from '../../playlist/playlist.repository';
 import { Playlist } from '../interfaces/playlist.interface';
 
 @Injectable()

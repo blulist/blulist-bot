@@ -6,6 +6,7 @@ import { AuthMiddleware } from './shared/middlewares/auth.middleware';
 import { UserModule } from './user/user.module';
 import { PlaylistModule } from './playlist/playlist.module';
 import { SessionMiddleware } from './shared/middlewares/session.middleware';
+import { TrackModule } from './track/track.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { SessionMiddleware } from './shared/middlewares/session.middleware';
     }),
     UserModule,
     PlaylistModule,
+    TrackModule,
   ],
   providers: [],
 })
