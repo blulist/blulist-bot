@@ -12,7 +12,10 @@ export class CheckPlaylistGuard implements CanActivate {
     const ctx = ctxCreate.getContext<Context>();
     const playlistSlug = ctx.match[1];
     const playlist: PlaylistWithTracks | null =
-      await this.playlistRepo.findbySlug(playlistSlug, true);
+      (await this.playlistRepo.findbySlug(
+        playlistSlug,
+        true,
+      )) as PlaylistWithTracks | null;
     if (!playlist) {
       if (ctx.callbackQuery) {
         return ctx.answerCbQuery('پلی لیست معتبر نیست', { show_alert: true });

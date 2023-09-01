@@ -11,7 +11,7 @@ export const mainMenuInlineKeyboards: InlineKeyboardButton[][] = [
   ],
   [{ text: '🔎 اکسپلور', callback_data: 'explore' }],
   [
-    { text: 'گیت هاب', url: 'https://github.com/sajjadmrx' },
+    { text: '🌐 وب اپلیکیشن', url: 'https://bluelist.ir' },
     { text: '📺 آموزش', callback_data: 'test' },
   ],
 ];

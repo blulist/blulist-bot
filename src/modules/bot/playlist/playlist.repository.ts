@@ -17,7 +17,7 @@ export class PlaylistRepository {
   findbySlug(
     slug: string,
     inclueTracks = false,
-  ): Promise<PlaylistWithTracks | null> {
+  ): Promise<Playlist | PlaylistWithTracks | null> {
     return this.db.playlist.findUnique({
       where: {
         slug,
@@ -46,6 +46,19 @@ export class PlaylistRepository {
       },
       orderBy: {
         createdAt: 'desc',
+      },
+    });
+  }
+
+  async updateViewCount(playlistSlug: string) {
+    return this.db.playlist.update({
+      where: {
+        slug: playlistSlug,
+      },
+      data: {
+        viewCount: {
+          increment: 1,
+        },
       },
     });
   }

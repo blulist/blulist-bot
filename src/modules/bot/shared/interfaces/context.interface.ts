@@ -4,4 +4,5 @@ import { Playlist, PlaylistWithTracks } from './playlist.interface';
 export interface Context extends Scenes.SceneContext {
   match: Array<string>;
   playlist: Playlist | PlaylistWithTracks;
+  startPayload: string | undefined;
 }

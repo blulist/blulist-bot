@@ -55,7 +55,7 @@ BluList - بلـولیـست
       return;
     }
     await ctx.answerCbQuery('درحال ارسال فایل ها...');
-    await ctx.editMessageText('درحال ارسال...');
+
     for (const track of playlist.tracks) {
       const buttons: InlineKeyboardButton[][] = [[]];
       if (isAdmin) {
@@ -73,12 +73,10 @@ BluList - بلـولیـست
       await ctx.sendAudio(fileUrl.file_id, {
         reply_markup: { inline_keyboard: buttons },
         caption: `
-آپلود شده توسط: <a href="tg://user?id=${track.addedById}">این کاربر</a> 
 BluList - بلـولیـست
 @bluListBot `,
         parse_mode: 'HTML',
       });
     }
-    await ctx.deleteMessage();
   }
 }

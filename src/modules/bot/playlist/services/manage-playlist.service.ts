@@ -113,27 +113,24 @@ export class ManagePlaylistService {
   }
 
   async showPlaylist(ctx: Context, playlistSlug: string) {
-    const playlist: PlaylistWithTracks | null =
-      await this.playlistRepo.findbySlug(playlistSlug, true);
+    const playlist: PlaylistWithTracks = (await this.playlistRepo.findbySlug(
+      playlistSlug,
+      true,
+    )) as PlaylistWithTracks;
     if (!playlist) return ctx.answerCbQuery(`❌ پلی لیست معتبر نیست`);
     await ctx.deleteMessage();
     if (playlist.bannerId) {
-      const banner = await ctx.telegram.getFileLink(playlist.bannerId);
+      const banner = await ctx.telegram.getFile(playlist.bannerId);
 
-      await ctx.sendPhoto(
-        {
-          url: banner.href,
+      await ctx.sendPhoto(banner.file_id, {
+        caption: getShowPlaylistMsg(playlist),
+        parse_mode: 'HTML',
+        reply_markup: {
+          inline_keyboard: playlistKeyboard(playlist.slug),
+          selective: true,
+          one_time_keyboard: true,
         },
-        {
-          caption: getShowPlaylistMsg(playlist),
-          parse_mode: 'HTML',
-          reply_markup: {
-            inline_keyboard: playlistKeyboard(playlist.slug),
-            selective: true,
-            one_time_keyboard: true,
-          },
-        },
-      );
+      });
     } else
       await ctx.sendMessage(getShowPlaylistMsg(playlist), {
         parse_mode: 'HTML',

@@ -31,21 +31,17 @@ export class ManagePlaylistUpdate {
   @Action(/select_playlist:(.*):(.*)/)
   @UseGuards(CheckPlaylistGuard)
   async onSelectedPlaylistAddTrack(@Ctx() ctx: Context) {
-    await ctx.answerCbQuery();
-
     const rediskey = ctx.match[2] as string;
     await this.playlistService.addTrack(ctx, rediskey);
   }
 
   @Action(inlineCbKeys.MY_PLAYLISTS)
   async onMyPlayLists(@Ctx() ctx: Context, @Sender('id') id: number) {
-    await ctx.answerCbQuery();
     await this.playlistService.myPlaylists(ctx, id);
   }
 
   @Action(/show_playlist:(.*)/)
   async onShowPlaylist(@Ctx() ctx: Context) {
-    await ctx.answerCbQuery();
     const playlistSlug = ctx.match[1] as string;
 
     await this.playlistService.showPlaylist(ctx, playlistSlug);
@@ -53,7 +49,6 @@ export class ManagePlaylistUpdate {
 
   @Action(editPlaylistRegex)
   async onEditClick(@Ctx() ctx: Context) {
-    await ctx.answerCbQuery();
     await ctx.editMessageReplyMarkup({
       inline_keyboard: editPlaylistKeyboard(ctx.match[1] as string),
     });
@@ -87,7 +82,6 @@ export class ManagePlaylistUpdate {
   @Action(showMyPlaylistFiles)
   @UseGuards(CheckPlaylistGuard)
   async onShowMyPlaylistFiles(@Ctx() ctx: Context) {
-    await ctx.answerCbQuery();
     return this.playlistService.showMyPlaylistFiles(ctx);
   }
 }

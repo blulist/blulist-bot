@@ -5,6 +5,7 @@ export type Playlist = _Playlist;
 export type PlaylistWithTracks = Playlist & {
   tracks: Track[];
 };
+
 export type PlaylistCreateInput = Omit<Prisma.PlaylistCreateInput, 'owner'> & {
   ownerId: number;
 };
