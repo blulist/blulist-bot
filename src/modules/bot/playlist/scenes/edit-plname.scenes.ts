@@ -9,11 +9,15 @@ export class EditPlnameScenes {
   @SceneEnter()
   async onEnter(ctx: Context) {
     await ctx.deleteMessage();
-    await ctx.sendMessage('لطفا نام جدید رو ارسال کنید:', {
+    const msg = await ctx.sendMessage('لطفا نام جدید رو ارسال کنید:', {
       reply_markup: {
         inline_keyboard: [[{ text: 'لغو', callback_data: 'cancel' }]],
       },
     });
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    ctx.scene.session.msgId = msg.message_id;
   }
 
   @On('text')
@@ -32,7 +36,5 @@ export class EditPlnameScenes {
       playlistSlug,
       playlistName,
     );
-
-    // await ctx.deleteMessage(msgId)
   }
 }

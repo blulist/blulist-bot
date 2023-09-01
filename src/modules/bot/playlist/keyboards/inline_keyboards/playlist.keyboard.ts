@@ -31,6 +31,12 @@ export const playlistKeyboard = (
         callback_data: 'delete_playlist',
       },
     ],
+    [
+      {
+        text: '> بازگشت',
+        callback_data: `backTo:myPlaylists`,
+      },
+    ],
   ];
 };
 

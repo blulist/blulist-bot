@@ -12,4 +12,12 @@ export class TrackRepository {
   create(input: TrackCreateInput): Promise<Track> {
     return this.db.track.create({ data: input });
   }
+
+  findAll(playlistId: number): Promise<Array<Track>> {
+    return this.db.track.findMany({
+      where: {
+        playlistId,
+      },
+    });
+  }
 }

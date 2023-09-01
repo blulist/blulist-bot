@@ -1,4 +1,4 @@
-import { Action, Ctx, Message, Sender, Update } from 'nestjs-telegraf';
+import { Action, Ctx, Sender, Update } from 'nestjs-telegraf';
 
 import { inlineCbKeys } from '../../shared/constants/callbacks.constant';
 import { Context } from '../../shared/interfaces/context.interface';
@@ -9,7 +9,10 @@ import {
   editPlaylistNameRegex,
   editPlaylistStatusRegex,
   editPlaylistRegex,
+  showMyPlaylistFiles,
 } from '../regexps/manage.regex';
+import { UseGuards } from '@nestjs/common';
+import { CheckPlaylistGuard } from '../../shared/guards/checkplaylist.guard';
 
 @Update()
 export class ManagePlaylistUpdate {
@@ -26,34 +29,20 @@ export class ManagePlaylistUpdate {
   }
 
   @Action(/select_playlist:(.*):(.*)/)
+  @UseGuards(CheckPlaylistGuard)
   async onSelectedPlaylistAddTrack(@Ctx() ctx: Context) {
     await ctx.answerCbQuery();
     const playlistSlug = ctx.match[1] as string;
 
     const rediskey = ctx.match[2] as string;
-    const result = await this.playlistService.addTrack(
-      ctx,
-      playlistSlug,
-      rediskey,
-    );
+    const result = await this.playlistService.addTrack(ctx, playlistSlug);
     await ctx.editMessageText(result, { parse_mode: 'HTML' });
   }
 
   @Action(inlineCbKeys.MY_PLAYLISTS)
   async onMyPlayLists(@Ctx() ctx: Context, @Sender('id') id: number) {
     await ctx.answerCbQuery();
-    const keyboards = await this.playlistService.myPlaylists(ctx, id);
-    await ctx.editMessageText(
-      `
-تعداد پلی لیست ها: ${keyboards.length}
-یک پلی لیست رو جهت مدیریت انتخاب کنید:
-    `,
-      {
-        reply_markup: {
-          inline_keyboard: keyboards,
-        },
-      },
-    );
+    await this.playlistService.myPlaylists(ctx, id);
   }
 
   @Action(/show_playlist:(.*)/)
@@ -73,32 +62,34 @@ export class ManagePlaylistUpdate {
   }
 
   @Action(editPlaylistNameRegex)
+  @UseGuards(CheckPlaylistGuard)
   async onEditPName(@Ctx() ctx: Context) {
     await ctx.scene.enter('enter_your_new_name');
-    const playlistSlug = ctx.match[1] as string;
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    ctx.scene.session.playlistSlug = playlistSlug;
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    ctx.scene.session.msgId = ctx.update.callback_query.message.message_id;
+    ctx.scene.session.playlistSlug = ctx.playlist.slug;
   }
 
   @Action(editPlaylistBannerRegex)
+  @UseGuards(CheckPlaylistGuard)
   async onEditPlaylistBanner(@Ctx() ctx: Context) {
     await ctx.scene.enter('enter_your_new_banner');
     const playlistSlug = ctx.match[1] as string;
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     ctx.scene.session.playlistSlug = playlistSlug;
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    ctx.scene.session.msgId = ctx.update.callback_query.message.message_id;
   }
 
   @Action(editPlaylistStatusRegex)
+  @UseGuards(CheckPlaylistGuard)
   async onEditToggleStatus(@Ctx() ctx: Context) {
-    const playlistSlug = ctx.match[1] as string;
-    return this.playlistService.toggleStatus(ctx, playlistSlug);
+    return this.playlistService.toggleStatus(ctx);
+  }
+
+  @Action(showMyPlaylistFiles)
+  @UseGuards(CheckPlaylistGuard)
+  async onShowMyPlaylistFiles(@Ctx() ctx: Context) {
+    await ctx.answerCbQuery();
+    return this.playlistService.showMyPlaylistFiles(ctx);
   }
 }

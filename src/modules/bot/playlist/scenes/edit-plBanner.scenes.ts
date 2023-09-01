@@ -1,7 +1,7 @@
 import { Ctx, Message, On, Scene, SceneEnter, Sender } from 'nestjs-telegraf';
 import { Context } from '../../shared/interfaces/context.interface';
 import { ManagePlaylistService } from '../services/manage-playlist.service';
-import { ChatPhoto } from 'telegraf/types';
+
 @Scene('enter_your_new_banner')
 export class EditPlBannerScenes {
   constructor(private playlistService: ManagePlaylistService) {}
@@ -9,11 +9,17 @@ export class EditPlBannerScenes {
   @SceneEnter()
   async onEnter(ctx: Context) {
     await ctx.deleteMessage();
-    await ctx.sendMessage('لطفا عکس بنر خود را ارسال یا فوروارد کنید:', {
-      reply_markup: {
-        inline_keyboard: [[{ text: 'لغو', callback_data: 'cancel' }]],
+    const msg = await ctx.sendMessage(
+      'لطفا عکس بنر خود را ارسال یا فوروارد کنید:',
+      {
+        reply_markup: {
+          inline_keyboard: [[{ text: 'لغو', callback_data: 'cancel' }]],
+        },
       },
-    });
+    );
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    ctx.scene.session.msgId = msg.message_id;
   }
 
   @On('photo')

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PlaylistRepository } from '../playlist.repository';
+import { PlaylistRepository } from '../repositories/playlist.repository';
 import * as crypto from 'crypto';
 
 import {
@@ -34,6 +34,7 @@ export class ManagePlaylistService {
       name: playlistName,
       ownerId: senderId,
     });
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     playlist.tracks = [];
     await ctx.reply(getShowPlaylistMsg(playlist as any), {
@@ -46,15 +47,11 @@ export class ManagePlaylistService {
     });
   }
 
-  async addTrack(
-    ctx: Context,
-    playlistkey: string,
-    redisKey: string,
-  ): Promise<string> {
+  async addTrack(ctx: Context, redisKey: string): Promise<string> {
     const audioString = await this.redisService.get(redisKey);
     if (!audioString) return '❌ معتبر نیست یا فرصت به اتمام رسیده';
     const playlist: Playlist | null = await this.playlistRepo.findbySlug(
-      playlistkey,
+      ctx.playlist.slug,
     );
     if (!playlist) return '❌ پلی لیست معتبر نیست یا حذف شده !';
     const audio: Audio = JSON.parse(audioString);
@@ -71,18 +68,27 @@ export class ManagePlaylistService {
     return ` ✅ فایل <code>${track.performer}</code> با موفقیت به پلی لیست <u>${playlist.name}</u> با ایدی <code>${playlist.slug}</code> اضافه شد.`;
   }
 
-  async myPlaylists(
-    ctx: Context,
-    userId: number,
-  ): Promise<InlineKeyboardButton[][]> {
+  async myPlaylists(ctx: Context, userId: number): Promise<void> {
     const playlists = await this.playlistRepo.findAllAUser(userId);
 
-    return playlists.map((pl) => [
+    const keyboards = playlists.map((pl) => [
       {
         text: `${pl.isPrivate ? '🔐' : '🔓'}〡${pl.name}〡${pl.slug}`,
         callback_data: `show_playlist:${pl.slug}`,
       },
     ]);
+    await ctx.deleteMessage();
+    await ctx.sendMessage(
+      `
+تعداد پلی لیست ها: ${keyboards.length}
+یک پلی لیست رو جهت مدیریت انتخاب کنید:
+    `,
+      {
+        reply_markup: {
+          inline_keyboard: keyboards,
+        },
+      },
+    );
   }
 
   async showPlaylist(ctx: Context, playlistSlug: string) {
@@ -151,17 +157,16 @@ export class ManagePlaylistService {
         reply_to_message_id: ctx.message.message_id,
       },
     );
+    console.log(ctx.scene.session);
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     await ctx.deleteMessage(ctx.scene.session.msgId);
     await ctx.scene.leave();
   }
 
-  async toggleStatus(ctx: Context, playlistSlug: string) {
-    let playlist: PlaylistWithTracks = await this.playlistRepo.findbySlug(
-      playlistSlug,
-    );
-    playlist = await this.playlistRepo.updateBySlug(playlistSlug, {
+  async toggleStatus(ctx: Context) {
+    let playlist: PlaylistWithTracks = ctx.playlist as PlaylistWithTracks;
+    playlist = await this.playlistRepo.updateBySlug(playlist.slug, {
       isPrivate: !playlist.isPrivate,
     });
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -172,14 +177,14 @@ export class ManagePlaylistService {
       await ctx.editMessageCaption(getShowPlaylistMsg(playlist), {
         parse_mode: 'HTML',
         reply_markup: {
-          inline_keyboard: editPlaylistKeyboard(playlistSlug),
+          inline_keyboard: editPlaylistKeyboard(playlist.slug),
         },
       });
     } else
       await ctx.editMessageText(getShowPlaylistMsg(playlist), {
         parse_mode: 'HTML',
         reply_markup: {
-          inline_keyboard: editPlaylistKeyboard(playlistSlug),
+          inline_keyboard: editPlaylistKeyboard(playlist.slug),
         },
       });
     await ctx.answerCbQuery(
@@ -187,5 +192,25 @@ export class ManagePlaylistService {
         playlist.isPrivate ? '🔐 خصوصی' : '🔓 عمومی'
       } تغییر کرد. `,
     );
+  }
+  async showMyPlaylistFiles(ctx: Context) {
+    const files = await this.trackRepo.findAll(ctx.playlist.id);
+
+    await ctx.deleteMessage();
+    const buttons: InlineKeyboardButton[][] = files.map((f) => [
+      { text: `${f.title} • ${f.performer}`, callback_data: 'test' },
+    ]);
+    buttons.unshift([
+      {
+        text: '> بازگشت',
+        callback_data: `backTo:mainPlaylist:${ctx.playlist.slug}`,
+      },
+      { text: 'ارسال همه', callback_data: 'test' },
+    ]);
+    await ctx.sendMessage(`فایل های پلی لیست ${ctx.playlist.name}`, {
+      reply_markup: {
+        inline_keyboard: buttons,
+      },
+    });
   }
 }
