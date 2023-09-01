@@ -3,6 +3,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import {
   Playlist,
   PlaylistCreateInput,
+  PlaylistUpdateInput,
   PlaylistWithTracks,
 } from '../shared/interfaces/playlist.interface';
 
@@ -24,6 +25,15 @@ export class PlaylistRepository {
       include: {
         tracks: inclueTracks,
       },
+    });
+  }
+
+  async updateBySlug(slug: string, input: PlaylistUpdateInput) {
+    return this.db.playlist.update({
+      where: {
+        slug,
+      },
+      data: input,
     });
   }
   findAllAUser(userId: number): Promise<Array<Playlist>> {

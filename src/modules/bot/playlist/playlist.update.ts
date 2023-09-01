@@ -3,8 +3,11 @@ import { Action, Ctx, Message, Sender, Update } from 'nestjs-telegraf';
 import { inlineCbKeys } from '../shared/constants/callbacks.constant';
 import { Context } from '../shared/interfaces/context.interface';
 import { PlaylistService } from './playlist.service';
-
-const editPlaylistRegex = new RegExp(`^${inlineCbKeys.EDIT_PLAYLIST}:(.*)$`);
+import { editPlaylistKeyboard } from './keyboards/inline_keyboards/playlist.keyboard';
+import {
+  editPlaylistNameRegex,
+  editPlaylistRegex,
+} from './regexps/manage.regex';
 
 @Update()
 export class PlaylistUpdate {
@@ -18,6 +21,7 @@ export class PlaylistUpdate {
 
   @Action(/select_playlist:(.*):(.*)/)
   async onSelectedPlaylistAddTrack(@Ctx() ctx: Context) {
+    await ctx.answerCbQuery();
     const playlistSlug = ctx.match[1] as string;
 
     const rediskey = ctx.match[2] as string;
@@ -31,6 +35,7 @@ export class PlaylistUpdate {
 
   @Action(inlineCbKeys.MY_PLAYLISTS)
   async onMyPlayLists(@Ctx() ctx: Context, @Sender('id') id: number) {
+    await ctx.answerCbQuery();
     const keyboards = await this.playlistService.myPlaylists(ctx, id);
     await ctx.editMessageText(
       `
@@ -47,32 +52,32 @@ export class PlaylistUpdate {
 
   @Action(/show_playlist:(.*)/)
   async onShowPlaylist(@Ctx() ctx: Context) {
+    await ctx.answerCbQuery();
     const playlistSlug = ctx.match[1] as string;
 
     const result = await this.playlistService.showPlaylist(ctx, playlistSlug);
     result.args
       ? await ctx.reply(result.text, result.args as any)
       : await ctx.reply(result.text);
-
-    await ctx.answerCbQuery();
   }
 
   @Action(editPlaylistRegex)
-  async onEditClick(@Ctx() ctx: Context, @Message('text') content: string) {
+  async onEditClick(@Ctx() ctx: Context) {
+    await ctx.answerCbQuery();
     await ctx.editMessageReplyMarkup({
-      inline_keyboard: [
-        [
-          { text: '🖼️ ویرایش بنر', callback_data: 'test' },
-          { text: '📝 ویرایش نام', callback_data: 'test' },
-        ],
-        [
-          {
-            text: '👀 تغییر وضعیت',
-            callback_data: 'test',
-          },
-        ],
-        [{ text: '> بازگشت', callback_data: 'back:show_playlist:xx' }],
-      ],
+      inline_keyboard: editPlaylistKeyboard(ctx.match[1] as string),
     });
+  }
+
+  @Action(editPlaylistNameRegex)
+  async onEditPName(@Ctx() ctx: Context) {
+    await ctx.scene.enter('enter_your_new_name');
+    const playlistSlug = ctx.match[1] as string;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    ctx.scene.session.playlistSlug = playlistSlug;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    ctx.scene.session.msgId = ctx.update.callback_query.message.message_id;
   }
 }

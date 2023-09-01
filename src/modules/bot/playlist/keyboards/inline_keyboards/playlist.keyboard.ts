@@ -33,3 +33,27 @@ export const playlistKeyboard = (
     ],
   ];
 };
+
+export const editPlaylistKeyboard = (
+  playlistSlug: string,
+): InlineKeyboardButton[][] => {
+  return [
+    [
+      {
+        text: '🖼️ ویرایش بنر',
+        callback_data: inlineCbKeys.EDIT_PLAYLIST_BANNER + `:${playlistSlug}`,
+      },
+      {
+        text: '📝 ویرایش نام',
+        callback_data: inlineCbKeys.EDIT_PLAYLIST_NAME + `:${playlistSlug}`,
+      },
+    ],
+    [
+      {
+        text: '👀 تغییر وضعیت',
+        callback_data: 'test',
+      },
+    ],
+    [{ text: '> بازگشت', callback_data: 'back:show_playlist:xx' }],
+  ];
+};

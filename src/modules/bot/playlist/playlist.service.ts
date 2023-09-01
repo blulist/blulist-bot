@@ -100,4 +100,21 @@ export class PlaylistService {
       },
     };
   }
+
+  async editPlaylistName(ctx: Context, playlistSlug: string, newName: string) {
+    if (newName.length > 30)
+      return await ctx.reply('❌ بیشتر از 30 کاراکتر نباید باشد.', {
+        reply_to_message_id: ctx.message.message_id,
+      });
+    await this.playlistRepo.updateBySlug(playlistSlug, {
+      name: newName,
+    });
+    await ctx.reply(
+      `• <b>${newName}</b> به عنوان نام جدید پلی لیست <code>${playlistSlug}</code> ثبت شد.`,
+      { reply_to_message_id: ctx.message.message_id, parse_mode: 'HTML' },
+    );
+    // @ts-ignore
+    await ctx.deleteMessage(ctx.scene.session.msgId);
+    await ctx.scene.leave();
+  }
 }

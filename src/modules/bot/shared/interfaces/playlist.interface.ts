@@ -8,3 +8,5 @@ export type PlaylistWithTracks = Playlist & {
 export type PlaylistCreateInput = Omit<Prisma.PlaylistCreateInput, 'owner'> & {
   ownerId: number;
 };
+
+export type PlaylistUpdateInput = Prisma.PlaylistUpdateInput;
