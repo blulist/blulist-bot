@@ -44,6 +44,9 @@ export class PlaylistRepository {
       where: {
         ownerId: userId,
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
   }
 }

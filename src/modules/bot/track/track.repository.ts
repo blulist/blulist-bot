@@ -17,6 +17,9 @@ export class TrackRepository {
       where: {
         playlistId,
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
   }
   findOneByUniqueId(uniqueId: string): Promise<Track> {
