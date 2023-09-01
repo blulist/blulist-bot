@@ -5,12 +5,13 @@ import { Context } from '../shared/interfaces/context.interface';
 import { PlaylistService } from './playlist.service';
 import { editPlaylistKeyboard } from './keyboards/inline_keyboards/playlist.keyboard';
 import {
+  editPlaylistBannerRegex,
   editPlaylistNameRegex,
   editPlaylistRegex,
 } from './regexps/manage.regex';
 
 @Update()
-export class PlaylistUpdate {
+export class ManagePlaylistUpdate {
   constructor(private playlistService: PlaylistService) {}
 
   @Action(inlineCbKeys.CREATE_PLAYLIST)
@@ -55,10 +56,7 @@ export class PlaylistUpdate {
     await ctx.answerCbQuery();
     const playlistSlug = ctx.match[1] as string;
 
-    const result = await this.playlistService.showPlaylist(ctx, playlistSlug);
-    result.args
-      ? await ctx.reply(result.text, result.args as any)
-      : await ctx.reply(result.text);
+    await this.playlistService.showPlaylist(ctx, playlistSlug);
   }
 
   @Action(editPlaylistRegex)
@@ -72,6 +70,18 @@ export class PlaylistUpdate {
   @Action(editPlaylistNameRegex)
   async onEditPName(@Ctx() ctx: Context) {
     await ctx.scene.enter('enter_your_new_name');
+    const playlistSlug = ctx.match[1] as string;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    ctx.scene.session.playlistSlug = playlistSlug;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    ctx.scene.session.msgId = ctx.update.callback_query.message.message_id;
+  }
+
+  @Action(editPlaylistBannerRegex)
+  async onEditPlaylistBanner(@Ctx() ctx: Context) {
+    await ctx.scene.enter('enter_your_new_banner');
     const playlistSlug = ctx.match[1] as string;
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore

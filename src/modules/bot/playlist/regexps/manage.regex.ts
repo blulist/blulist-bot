@@ -7,3 +7,6 @@ export const editPlaylistRegex = new RegExp(
 export const editPlaylistNameRegex = new RegExp(
   `^${inlineCbKeys.EDIT_PLAYLIST_NAME}:(.*)$`,
 );
+export const editPlaylistBannerRegex = new RegExp(
+  `^${inlineCbKeys.EDIT_PLAYLIST_BANNER}:(.*)$`,
+);

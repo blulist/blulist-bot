@@ -11,8 +11,8 @@ export const playlistKeyboard = (
         callback_data: inlineCbKeys.EDIT_PLAYLIST + `:${playlistSlug}`,
       },
       {
-        text: '➕ اضافه کردن ادمین',
-        callback_data: inlineCbKeys.ADD_MUSIC + `:${playlistSlug}`,
+        text: '🗃️ فایل ها',
+        callback_data: inlineCbKeys.SHOW_MY_FILES + `:${playlistSlug}`,
       },
     ],
     [

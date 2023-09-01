@@ -31,6 +31,7 @@ model Playlist {
   name      String   @db.VarChar(30)
   likes     Int      @default(0) @db.Int
   viewCount Int      @default(0)
+  bannerId  String   @default("") @db.VarChar(90)
   isPrivate Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

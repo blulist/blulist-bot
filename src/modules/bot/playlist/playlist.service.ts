@@ -84,21 +84,34 @@ export class PlaylistService {
   async showPlaylist(ctx: Context, playlistSlug: string) {
     const playlist: PlaylistWithTracks | null =
       await this.playlistRepo.findbySlug(playlistSlug, true);
-    if (!playlist)
-      return {
-        text: `پلی لیست معتبر نیست`,
-      };
-    return {
-      text: getShowPlaylistMsg(playlist),
-      args: {
+    if (!playlist) return ctx.answerCbQuery(`❌ پلی لیست معتبر نیست`);
+    await ctx.deleteMessage();
+    if (playlist.bannerId) {
+      const banner = await ctx.telegram.getFileLink(playlist.bannerId);
+
+      await ctx.sendPhoto(
+        {
+          url: banner.href,
+        },
+        {
+          caption: getShowPlaylistMsg(playlist),
+          parse_mode: 'HTML',
+          reply_markup: {
+            inline_keyboard: playlistKeyboard(playlist.slug),
+            selective: true,
+            one_time_keyboard: true,
+          },
+        },
+      );
+    } else
+      await ctx.sendMessage(getShowPlaylistMsg(playlist), {
         parse_mode: 'HTML',
         reply_markup: {
           inline_keyboard: playlistKeyboard(playlist.slug),
           selective: true,
           one_time_keyboard: true,
         },
-      },
-    };
+      });
   }
 
   async editPlaylistName(ctx: Context, playlistSlug: string, newName: string) {
@@ -113,6 +126,28 @@ export class PlaylistService {
       `• <b>${newName}</b> به عنوان نام جدید پلی لیست <code>${playlistSlug}</code> ثبت شد.`,
       { reply_to_message_id: ctx.message.message_id, parse_mode: 'HTML' },
     );
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    await ctx.deleteMessage(ctx.scene.session.msgId);
+    await ctx.scene.leave();
+  }
+
+  async editPlaylistBanner(
+    ctx: Context,
+    playlistSlug: string,
+    newBannerId: string,
+  ) {
+    const playlist = await this.playlistRepo.updateBySlug(playlistSlug, {
+      bannerId: newBannerId,
+    });
+    await ctx.reply(
+      `• بنر پلی لیست <b>${playlist.name}</b> با ایدی <code>${playlist.slug}</code> بروزرسانی شد.`,
+      {
+        parse_mode: 'HTML',
+        reply_to_message_id: ctx.message.message_id,
+      },
+    );
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     await ctx.deleteMessage(ctx.scene.session.msgId);
     await ctx.scene.leave();
