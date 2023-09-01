@@ -209,7 +209,10 @@ export class ManagePlaylistService {
         text: '> بازگشت',
         callback_data: `backTo:mainPlaylist:${ctx.playlist.slug}`,
       },
-      { text: 'ارسال همه', callback_data: 'test' },
+      {
+        text: 'ارسال همه',
+        callback_data: `sendAllTracks:${ctx.playlist.slug}`,
+      },
     ]);
     await ctx.sendMessage(
       `فایل های پلی لیست <b>${ctx.playlist.name}</b> با ایدی <code>${ctx.playlist.slug}</code>

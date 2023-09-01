@@ -3,6 +3,7 @@ import { Context } from '../../shared/interfaces/context.interface';
 import { InlineKeyboardButton } from '../../shared/interfaces/keyboard.interface';
 import { TrackRepository } from '../track.repository';
 import { Track } from '../../shared/interfaces/track.interface';
+import { PlaylistWithTracks } from '../../shared/interfaces/playlist.interface';
 
 @Injectable()
 export class TrackService {
@@ -43,5 +44,41 @@ BluList - بلـولیـست
 @bluListBot `,
       parse_mode: 'HTML',
     });
+  }
+  async sendAllTracks(ctx: Context, userId: number) {
+    const playlist = ctx.playlist as PlaylistWithTracks;
+    const isAdmin = Number(playlist.ownerId) === userId;
+    if (!playlist.tracks.length) {
+      await ctx.answerCbQuery('فایلی در پلی لیست یافت نشد', {
+        show_alert: true,
+      });
+      return;
+    }
+    await ctx.answerCbQuery('درحال ارسال فایل ها...');
+    await ctx.editMessageText('درحال ارسال...');
+    for (const track of playlist.tracks) {
+      const buttons: InlineKeyboardButton[][] = [[]];
+      if (isAdmin) {
+        buttons.push([
+          {
+            text: 'حذف  فایل از پلی لیست',
+            callback_data: `removeTrack:${ctx.playlist.slug}:${track.uniqueId}`,
+          },
+        ]);
+      }
+
+      const fileUrl = await ctx.telegram.getFile(track.file_id);
+      await ctx.sendChatAction('upload_document');
+
+      await ctx.sendAudio(fileUrl.file_id, {
+        reply_markup: { inline_keyboard: buttons },
+        caption: `
+آپلود شده توسط: <a href="tg://user?id=${track.addedById}">این کاربر</a> 
+BluList - بلـولیـست
+@bluListBot `,
+        parse_mode: 'HTML',
+      });
+    }
+    await ctx.deleteMessage();
   }
 }

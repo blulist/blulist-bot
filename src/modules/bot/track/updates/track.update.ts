@@ -12,4 +12,10 @@ export class TrackUpdate {
   async onSelectTrack(@Ctx() ctx: Context, @Sender('id') userId: number) {
     return this.trackService.selectTrack(ctx, ctx.match[2], userId);
   }
+
+  @Action(/sendAllTracks:(.*)/)
+  @UseGuards(CheckPlaylistGuard)
+  async onSendAllTracks(@Ctx() ctx: Context, @Sender('id') userId: number) {
+    return this.trackService.sendAllTracks(ctx, userId);
+  }
 }
