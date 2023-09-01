@@ -17,7 +17,11 @@ export class ManagePlaylistUpdate {
 
   @Action(inlineCbKeys.CREATE_PLAYLIST)
   async onCreatePlaylist(@Ctx() ctx: Context) {
-    await ctx.editMessageText('اسم مورد نظر رو وارد کنید...');
+    await ctx.editMessageText('اسم مورد نظر رو وارد کنید...', {
+      reply_markup: {
+        inline_keyboard: [[{ text: 'لغو', callback_data: 'cancel' }]],
+      },
+    });
     await ctx.scene.enter('send_playlist_name');
   }
 

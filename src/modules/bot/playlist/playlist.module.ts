@@ -7,12 +7,12 @@ import { FileEvent } from './file.event';
 import { TrackRepository } from './repositories/track.repository';
 import { EditPlnameScenes } from './scenes/edit-plname.scenes';
 import { EditPlBannerScenes } from './scenes/edit-plBanner.scenes';
-import { BackHandlerUpdate } from './updates/back-handler.update';
+import { BackAndCancelHandlerUpdate } from './updates/back-and-cancel-handler.update';
 
 @Module({
   providers: [
     ManagePlaylistUpdate,
-    BackHandlerUpdate,
+    BackAndCancelHandlerUpdate,
     SendPlnameScenes,
     EditPlnameScenes,
     EditPlBannerScenes,

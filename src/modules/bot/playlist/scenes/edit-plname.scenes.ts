@@ -8,7 +8,8 @@ export class EditPlnameScenes {
 
   @SceneEnter()
   async onEnter(ctx: Context) {
-    await ctx.editMessageText('لطفا نام جدید رو ارسال کنید:', {
+    await ctx.deleteMessage();
+    await ctx.sendMessage('لطفا نام جدید رو ارسال کنید:', {
       reply_markup: {
         inline_keyboard: [[{ text: 'لغو', callback_data: 'cancel' }]],
       },
