@@ -55,14 +55,16 @@ export class ManagePlaylistService {
     );
     if (!playlist) return '❌ پلی لیست معتبر نیست یا حذف شده !';
     const audio: Audio = JSON.parse(audioString);
-    console.log(audio);
     const track = await this.trackRepo.create({
       playlistId: playlist.id,
       addedById: ctx.from.id,
       file_id: audio.file_id,
-      title: audio.title,
+      title: audio.title || audio.file_name,
       file_unique_id: audio.file_unique_id,
-      performer: audio.performer == '<unknown>' ? 'N/A' : audio.performer,
+      performer:
+        audio.performer == '<unknown>'
+          ? 'N/A'
+          : audio.performer || audio.file_name,
       uniqueId: getRandomString(10),
     });
     return ` ✅ فایل <code>${track.performer}</code> با موفقیت به پلی لیست <u>${playlist.name}</u> با ایدی <code>${playlist.slug}</code> اضافه شد.`;
@@ -157,7 +159,6 @@ export class ManagePlaylistService {
         reply_to_message_id: ctx.message.message_id,
       },
     );
-    console.log(ctx.scene.session);
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     await ctx.deleteMessage(ctx.scene.session.msgId);

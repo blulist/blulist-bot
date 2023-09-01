@@ -11,11 +11,17 @@ export class CheckPlaylistGuard implements CanActivate {
     const ctxCreate = TelegrafExecutionContext.create(context);
     const ctx = ctxCreate.getContext<Context>();
     const playlistSlug = ctx.match[1];
+    console.log(ctx.match);
     const playlist: Playlist | null = await this.playlistRepo.findbySlug(
       playlistSlug,
     );
     if (!playlist) {
-      throw new TelegrafException('پلی لیست معتبر نیست');
+      if (ctx.callbackQuery) {
+        return ctx.answerCbQuery('پلی لیست معتبر نیست', { show_alert: true });
+      } else
+        await ctx.reply('پلی لیست معتبر نیست', {
+          reply_to_message_id: ctx.message.message_id,
+        });
     }
     ctx.playlist = playlist;
     return true;

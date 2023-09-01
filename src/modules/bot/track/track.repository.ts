@@ -7,7 +7,9 @@ export class TrackRepository {
   constructor(private db: PrismaService) {}
 
   create(input: TrackCreateInput): Promise<Track> {
-    return this.db.track.create({ data: input });
+    return this.db.track.create({
+      data: input,
+    });
   }
 
   findAll(playlistId: number): Promise<Array<Track>> {
@@ -15,6 +17,18 @@ export class TrackRepository {
       where: {
         playlistId,
       },
+    });
+  }
+  findOneByUniqueId(uniqueId: string): Promise<Track> {
+    return this.db.track.findUnique({
+      where: {
+        uniqueId,
+      },
+    });
+  }
+  deleteOneByUniqueId(uniqueId: string): Promise<Track> {
+    return this.db.track.delete({
+      where: { uniqueId },
     });
   }
 }

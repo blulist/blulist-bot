@@ -32,10 +32,9 @@ export class ManagePlaylistUpdate {
   @UseGuards(CheckPlaylistGuard)
   async onSelectedPlaylistAddTrack(@Ctx() ctx: Context) {
     await ctx.answerCbQuery();
-    const playlistSlug = ctx.match[1] as string;
 
     const rediskey = ctx.match[2] as string;
-    const result = await this.playlistService.addTrack(ctx, playlistSlug);
+    const result = await this.playlistService.addTrack(ctx, rediskey);
     await ctx.editMessageText(result, { parse_mode: 'HTML' });
   }
 
