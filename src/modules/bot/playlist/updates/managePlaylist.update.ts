@@ -34,8 +34,7 @@ export class ManagePlaylistUpdate {
     await ctx.answerCbQuery();
 
     const rediskey = ctx.match[2] as string;
-    const result = await this.playlistService.addTrack(ctx, rediskey);
-    await ctx.editMessageText(result, { parse_mode: 'HTML' });
+    await this.playlistService.addTrack(ctx, rediskey);
   }
 
   @Action(inlineCbKeys.MY_PLAYLISTS)

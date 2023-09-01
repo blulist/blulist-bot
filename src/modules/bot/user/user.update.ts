@@ -1,6 +1,6 @@
 import { Ctx, Start, Update } from 'nestjs-telegraf';
 import { Context } from '../shared/interfaces/context.interface';
-import { startKeyboard } from './keyboards/inline_keyboards/start.keyboard';
+import { mainMenuInlineKeyboards } from '../shared/keyboards/main.keyboard';
 
 @Update()
 export class UserUpdate {
@@ -13,7 +13,7 @@ export class UserUpdate {
     `,
       {
         reply_markup: {
-          inline_keyboard: startKeyboard,
+          inline_keyboard: mainMenuInlineKeyboards,
           one_time_keyboard: true,
           selective: true,
         },

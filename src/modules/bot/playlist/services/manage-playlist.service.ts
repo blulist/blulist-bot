@@ -17,6 +17,7 @@ import {
 import { getRandomString } from '../../../../shared/utils/random.util';
 import { InlineKeyboardButton } from '../../shared/interfaces/keyboard.interface';
 import { getShowPlaylistMsg } from '../messages/showPlaylist.msg';
+import { mainMenuInlineKeyboards } from '../../shared/keyboards/main.keyboard';
 @Injectable()
 export class ManagePlaylistService {
   constructor(
@@ -49,11 +50,23 @@ export class ManagePlaylistService {
 
   async addTrack(ctx: Context, redisKey: string): Promise<string> {
     const audioString = await this.redisService.get(redisKey);
-    if (!audioString) return '❌ معتبر نیست یا فرصت به اتمام رسیده';
+    if (!audioString) {
+      await ctx.reply('❌ معتبر نیست یا فرصت به اتمام رسیده', {
+        reply_to_message_id: ctx.message.message_id,
+        reply_markup: { inline_keyboard: mainMenuInlineKeyboards },
+      });
+      return;
+    }
     const playlist: Playlist | null = await this.playlistRepo.findbySlug(
       ctx.playlist.slug,
     );
-    if (!playlist) return '❌ پلی لیست معتبر نیست یا حذف شده !';
+    if (!playlist) {
+      await ctx.reply('❌ پلی لیست معتبر نیست یا حذف شده !', {
+        reply_to_message_id: ctx.message.message_id,
+        reply_markup: { inline_keyboard: mainMenuInlineKeyboards },
+      });
+      return;
+    }
     const audio: Audio = JSON.parse(audioString);
     const track = await this.trackRepo.create({
       playlistId: playlist.id,
@@ -67,7 +80,13 @@ export class ManagePlaylistService {
           : audio.performer || audio.file_name,
       uniqueId: getRandomString(10),
     });
-    return ` ✅ فایل <code>${track.performer}</code> با موفقیت به پلی لیست <u>${playlist.name}</u> با ایدی <code>${playlist.slug}</code> اضافه شد.`;
+    const text = ` ✅ فایل <code>${track.performer}</code> با موفقیت به پلی لیست <u>${playlist.name}</u> با ایدی <code>${playlist.slug}</code> اضافه شد.`;
+    await ctx.editMessageText(text, {
+      parse_mode: 'HTML',
+      reply_markup: {
+        inline_keyboard: mainMenuInlineKeyboards,
+      },
+    });
   }
 
   async myPlaylists(ctx: Context, userId: number): Promise<void> {

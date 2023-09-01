@@ -1,7 +1,7 @@
-import { InlineKeyboardButton } from '../../../shared/interfaces/keyboard.interface';
-import { inlineCbKeys } from '../../../shared/constants/callbacks.constant';
+import { InlineKeyboardButton } from '../interfaces/keyboard.interface';
+import { inlineCbKeys } from '../constants/callbacks.constant';
 
-export const startKeyboard: InlineKeyboardButton[][] = [
+export const mainMenuInlineKeyboards: InlineKeyboardButton[][] = [
   [
     { text: '🗃️ پلی لیست های من', callback_data: inlineCbKeys.MY_PLAYLISTS },
     {
