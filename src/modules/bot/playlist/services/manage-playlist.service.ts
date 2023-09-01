@@ -58,13 +58,14 @@ export class ManagePlaylistService {
     );
     if (!playlist) return '❌ پلی لیست معتبر نیست یا حذف شده !';
     const audio: Audio = JSON.parse(audioString);
+    console.log(audio);
     const track = await this.trackRepo.create({
       playlistId: playlist.id,
       addedById: ctx.from.id,
       file_id: audio.file_id,
       title: audio.title,
       file_unique_id: audio.file_unique_id,
-      performer: audio.performer,
+      performer: audio.performer == '<unknown>' ? 'N/A' : audio.performer,
       uniqueId: getRandomString(10),
     });
     return ` ✅ فایل <code>${track.performer}</code> با موفقیت به پلی لیست <u>${playlist.name}</u> با ایدی <code>${playlist.slug}</code> اضافه شد.`;

@@ -42,7 +42,7 @@ model Track {
   uniqueId       String   @unique
   title          String
   performer      String
-  file_unique_id String   @unique
+  file_unique_id String
   file_id        String
   playlistId     Int
   playlist       Playlist @relation(fields: [playlistId], references: [id], onUpdate: Cascade, onDelete: Cascade)

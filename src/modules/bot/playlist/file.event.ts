@@ -3,23 +3,21 @@ import { Ctx, Update, On, Message } from 'nestjs-telegraf';
 import { Context } from '../shared/interfaces/context.interface';
 import { RedisService } from '../../redis/redis.service';
 import { getRandomString } from '../../../shared/utils/random.util';
-import { PrismaClient } from '@prisma/client';
 import { InlineKeyboardButton } from '../shared/interfaces/keyboard.interface';
+import { PlaylistRepository } from './playlist.repository';
 
 @Update()
 export class FileEvent {
-  constructor(private redis: RedisService) {}
+  constructor(
+    private redis: RedisService,
+    private playlistRepo: PlaylistRepository,
+  ) {}
   @On('audio')
   async onSendAudio(@Ctx() ctx: Context, @Message('audio') audio: any) {
     // const fileUrl = await ctx.telegram.getFile(audio.file_id);
     const key: string = getRandomString(12);
     this.redis.setex(key, 60, JSON.stringify(audio));
-    const client = new PrismaClient();
-    const playlists = await client.playlist.findMany({
-      where: {
-        ownerId: ctx.from.id,
-      },
-    });
+    const playlists = await this.playlistRepo.findAllAUser(ctx.from.id);
     const btns: InlineKeyboardButton[][] = playlists.map((pl) => [
       {
         text: `${pl.name} - ${pl.slug}`,
