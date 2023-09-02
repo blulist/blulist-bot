@@ -44,11 +44,15 @@ export class UserService {
 🐳 BluList - بلـولیـست
 @bluListBot
 `;
+
+    const likeCounts = await this.playlistRepo.getPlaylistLikesCount(
+      playlist.id,
+    );
     if (playlist.bannerId) {
       const bannerFile = await ctx.telegram.getFile(playlist.bannerId);
       await ctx.sendPhoto(bannerFile.file_id, {
         reply_markup: {
-          inline_keyboard: userPlaylistKeyboard(playlist),
+          inline_keyboard: userPlaylistKeyboard(playlist, likeCounts),
           resize_keyboard: true,
         },
         parse_mode: 'HTML',
@@ -57,7 +61,7 @@ export class UserService {
     } else {
       await ctx.sendMessage(content, {
         reply_markup: {
-          inline_keyboard: userPlaylistKeyboard(playlist),
+          inline_keyboard: userPlaylistKeyboard(playlist, likeCounts),
           resize_keyboard: true,
         },
         parse_mode: 'HTML',

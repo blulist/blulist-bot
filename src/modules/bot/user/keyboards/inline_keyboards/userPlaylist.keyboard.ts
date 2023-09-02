@@ -3,6 +3,7 @@ import { PlaylistWithTracks } from '../../../shared/interfaces/playlist.interfac
 
 export const userPlaylistKeyboard = (
   playlist: PlaylistWithTracks,
+  likeCounts: number,
 ): InlineKeyboardButton[][] => {
   const files: InlineKeyboardButton[][] = playlist.tracks.map((tr) => [
     {
@@ -25,8 +26,8 @@ export const userPlaylistKeyboard = (
         callback_data: `soon`,
       },
       {
-        text: `❤️ ${0}`,
-        callback_data: `soon`, ///`likePlaylist:${playlist.slug}`,
+        text: `❤️ ${likeCounts}`,
+        callback_data: `likePlaylist:${playlist.slug}`,
       },
     ],
 

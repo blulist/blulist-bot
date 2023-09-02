@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import {
+  Like,
   Playlist,
   PlaylistCreateInput,
   PlaylistUpdateInput,
@@ -65,5 +66,44 @@ export class PlaylistRepository {
 
   async deleteOneBySlug(slug: string) {
     return this.db.playlist.delete({ where: { slug } });
+  }
+
+  addLike(playlistId: number, userId: number): Promise<Like> {
+    return this.db.like.create({
+      data: {
+        playlistId: playlistId,
+        userId: userId,
+      },
+    });
+  }
+
+  getPlaylistLikesCount(playlistId: number) {
+    return this.db.like.count({
+      where: {
+        playlistId: playlistId,
+      },
+    });
+  }
+
+  removeLike(playlistId: number, userId: number): Promise<Like> {
+    return this.db.like.delete({
+      where: {
+        playlistId_userId: {
+          playlistId: playlistId,
+          userId: userId,
+        },
+      },
+    });
+  }
+
+  findOneLike(playlistId: number, userId: number): Promise<Like | null> {
+    return this.db.like.findUnique({
+      where: {
+        playlistId_userId: {
+          playlistId: playlistId,
+          userId: userId,
+        },
+      },
+    });
   }
 }
