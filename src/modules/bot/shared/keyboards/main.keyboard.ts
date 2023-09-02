@@ -9,9 +9,13 @@ export const mainMenuInlineKeyboards: InlineKeyboardButton[][] = [
       callback_data: inlineCbKeys.CREATE_PLAYLIST,
     },
   ],
-  [{ text: '🔎 اکسپلور', callback_data: 'explore' }],
+  [{ text: '🔎 اکسپلور', callback_data: 'soon' }],
+  [
+    { text: 'کانال ما', callback_data: 'https://t.me/blulist_support' },
+    { text: '❤️ پسندیدها', callback_data: 'soon' },
+  ],
   [
     { text: '🌐 وب اپلیکیشن', url: 'https://bluelist.ir' },
-    { text: '📺 آموزش', callback_data: 'test' },
+    { text: '📺 آموزش', callback_data: 'soon' },
   ],
 ];

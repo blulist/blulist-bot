@@ -21,8 +21,8 @@ export const userPlaylistKeyboard = (
   const buttons = [
     [
       {
-        text: `🏷 ذخیره`,
-        callback_data: `bookmarkPlaylist:${playlist.slug}`,
+        text: `🛡️ گزارش`,
+        callback_data: `soon`,
       },
       {
         text: `❤️ ${playlist.likes}`,

@@ -49,6 +49,7 @@ export class UserService {
       await ctx.sendPhoto(bannerFile.file_id, {
         reply_markup: {
           inline_keyboard: userPlaylistKeyboard(playlist),
+          resize_keyboard: true,
         },
         parse_mode: 'HTML',
         caption: content,
@@ -57,6 +58,7 @@ export class UserService {
       await ctx.sendMessage(content, {
         reply_markup: {
           inline_keyboard: userPlaylistKeyboard(playlist),
+          resize_keyboard: true,
         },
         parse_mode: 'HTML',
       });
