@@ -5,6 +5,7 @@ import { RedisService } from '../../redis/redis.service';
 import { getRandomString } from '../../../shared/utils/random.util';
 import { InlineKeyboardButton } from '../shared/interfaces/keyboard.interface';
 import { PlaylistRepository } from '../playlist/playlist.repository';
+import { ExtraAudio } from 'telegraf/typings/telegram-types';
 
 @Update()
 export class FileEvent {
@@ -14,7 +15,6 @@ export class FileEvent {
   ) {}
   @On('audio')
   async onSendAudio(@Ctx() ctx: Context, @Message('audio') audio: any) {
-    // const fileUrl = await ctx.telegram.getFile(audio.file_id);
     const key: string = getRandomString(12);
     this.redis.setex(key, 60, JSON.stringify(audio));
     const playlists = await this.playlistRepo.findAllAUser(ctx.from.id);

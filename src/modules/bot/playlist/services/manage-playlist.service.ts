@@ -69,6 +69,8 @@ export class ManagePlaylistService {
       return;
     }
     const audio: Audio = JSON.parse(audioString);
+    const thumbnail = audio.thumb;
+    console.log(thumbnail);
     const track = await this.trackRepo.create({
       playlistId: playlist.id,
       addedById: ctx.from.id,
@@ -80,6 +82,7 @@ export class ManagePlaylistService {
           ? 'N/A'
           : audio.performer || audio.file_name,
       uniqueId: getRandomString(10),
+      thumbnail: thumbnail ? thumbnail.file_id || '' : '',
     });
     const text = ` ✅ فایل <code>${track.performer}</code> با موفقیت به پلی لیست <u>${playlist.name}</u> با ایدی <code>${playlist.slug}</code> اضافه شد.`;
     await ctx.editMessageText(text, {

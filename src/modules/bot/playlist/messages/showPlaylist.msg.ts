@@ -6,7 +6,7 @@ export function getShowPlaylistMsg(playlist: PlaylistWithTracks): string {
 اسم پلی لیست: ${playlist.name}
 آیدی یونیک: <code>${playlist.slug}</code>
 ↲ آمار بازدید: ${playlist.viewCount}
-↲ آمار لایک: ${playlist.likes}
+↲ آمار لایک: ${0}
 ↲ تعداد محتوا: ${playlist.tracks.length}
 ↲ وضعیت مشاهده: ${playlist.isPrivate ? '🔐 خصوصی' : '🔓 عمومی'}
 ↲ ایجاد شده در: ${moment(playlist.createdAt).format('YYYY/MM/DD')}

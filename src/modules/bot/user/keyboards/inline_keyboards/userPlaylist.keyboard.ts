@@ -25,8 +25,8 @@ export const userPlaylistKeyboard = (
         callback_data: `soon`,
       },
       {
-        text: `❤️ ${playlist.likes}`,
-        callback_data: `likePlaylist:${playlist.slug}`,
+        text: `❤️ ${0}`,
+        callback_data: `soon`, ///`likePlaylist:${playlist.slug}`,
       },
     ],
 

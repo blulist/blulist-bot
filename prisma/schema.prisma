@@ -18,6 +18,7 @@ model User {
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   tracks    Track[]
+  like      Like[]
 
   @@index([userId])
 }
@@ -29,12 +30,13 @@ model Playlist {
   tracks    Track[]
   slug      String   @unique @db.VarChar(16)
   name      String   @db.VarChar(30)
-  likes     Int      @default(0) @db.Int
+  // likes     Int      @default(0) @db.Int
   viewCount Int      @default(0)
   bannerId  String   @default("") @db.VarChar(90)
   isPrivate Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  likes     Like[]
 }
 
 model Track {
@@ -43,6 +45,7 @@ model Track {
   title          String
   performer      String
   file_unique_id String
+  thumbnail      String?  @default("")
   file_id        String
   playlistId     Int
   playlist       Playlist @relation(fields: [playlistId], references: [id], onUpdate: Cascade, onDelete: Cascade)
@@ -50,4 +53,16 @@ model Track {
   addedBy        User     @relation(fields: [addedById], references: [userId], onDelete: Cascade)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+}
+
+model Like {
+  id         Int      @id @default(autoincrement())
+  playlistId Int
+  playlist   Playlist @relation(references: [id], fields: [playlistId])
+  userId     BigInt
+  user       User     @relation(fields: [userId], references: [userId])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([playlistId, userId])
 }

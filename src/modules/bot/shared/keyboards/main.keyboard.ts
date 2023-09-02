@@ -11,7 +11,7 @@ export const mainMenuInlineKeyboards: InlineKeyboardButton[][] = [
   ],
   [{ text: '🔎 اکسپلور', callback_data: 'soon' }],
   [
-    { text: 'کانال ما', callback_data: 'https://t.me/blulist_support' },
+    { text: 'کانال ما', url: 'https://t.me/blulist_support' },
     { text: '❤️ پسندیدها', callback_data: 'soon' },
   ],
   [
