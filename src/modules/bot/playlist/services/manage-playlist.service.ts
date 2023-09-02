@@ -70,7 +70,6 @@ export class ManagePlaylistService {
     }
     const audio: Audio = JSON.parse(audioString);
     const thumbnail = audio.thumb;
-    console.log(thumbnail);
     const track = await this.trackRepo.create({
       playlistId: playlist.id,
       addedById: ctx.from.id,
@@ -203,7 +202,6 @@ export class ManagePlaylistService {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     await ctx.deleteMessage(ctx.scene.session.msgId);
-    await ctx.scene.leave();
   }
 
   async toggleStatus(ctx: Context) {

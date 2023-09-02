@@ -1,4 +1,4 @@
-import { Action, Ctx, Sender, Update } from 'nestjs-telegraf';
+import { Action, Ctx, Command, Sender, Update, Message } from 'nestjs-telegraf';
 
 import { inlineCbKeys } from '../../shared/constants/callbacks.constant';
 import { Context } from '../../shared/interfaces/context.interface';
@@ -21,12 +21,21 @@ export class ManagePlaylistUpdate {
   constructor(private playlistService: ManagePlaylistService) {}
 
   @Action(inlineCbKeys.CREATE_PLAYLIST)
-  async onCreatePlaylist(@Ctx() ctx: Context) {
-    await ctx.editMessageText('اسم مورد نظر رو وارد کنید...', {
-      reply_markup: {
-        inline_keyboard: [[{ text: 'لغو', callback_data: 'cancel' }]],
-      },
-    });
+  @Command('create')
+  async onCreatePlaylist(@Ctx() ctx: Context, @Message('text') text: string) {
+    if (text == '/create') {
+      await ctx.sendMessage('اسم مورد نظر رو وارد کنید...', {
+        reply_markup: {
+          inline_keyboard: [[{ text: 'لغو', callback_data: 'cancel' }]],
+        },
+      });
+    } else
+      await ctx.editMessageText('اسم مورد نظر رو وارد کنید...', {
+        reply_markup: {
+          inline_keyboard: [[{ text: 'لغو', callback_data: 'cancel' }]],
+        },
+      });
+
     await ctx.scene.enter('send_playlist_name');
   }
 

@@ -40,5 +40,6 @@ export class EditPlBannerScenes {
       playlistSlug,
       lastItem.file_id,
     );
+    await ctx.scene.leave();
   }
 }

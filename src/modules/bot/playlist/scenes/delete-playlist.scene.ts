@@ -40,5 +40,6 @@ export class DeletePlaylistScene {
   @UseGuards(checkPlaylistPermission())
   async onDelete(@Ctx() ctx: Context) {
     await this.managePlaylistService.deletePlaylist(ctx);
+    await ctx.scene.leave();
   }
 }
