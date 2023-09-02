@@ -3,8 +3,11 @@ import { backToMainPlaylistRegex } from '../regexps/manage.regex';
 import { Context } from '../../shared/interfaces/context.interface';
 import { playlistKeyboard } from '../keyboards/inline_keyboards/playlist.keyboard';
 import { ManagePlaylistService } from '../services/manage-playlist.service';
+import { UseFilters } from '@nestjs/common';
+import { ExceptionsFilter } from '../../shared/filters/exceptions.filter';
 
 @Update()
+@UseFilters(ExceptionsFilter)
 export class BackAndCancelHandlerUpdate {
   constructor(private managePlaylistService: ManagePlaylistService) {}
   @Action(backToMainPlaylistRegex)

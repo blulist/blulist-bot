@@ -13,10 +13,12 @@ import {
   sharePlaylistRegex,
   deletePlaylistRegex,
 } from '../regexps/manage.regex';
-import { UseGuards } from '@nestjs/common';
+import { UseFilters, UseGuards } from '@nestjs/common';
 import { CheckPlaylistGuard } from '../../shared/guards/checkplaylist.guard';
+import { ExceptionsFilter } from '../../shared/filters/exceptions.filter';
 
 @Update()
+@UseFilters(ExceptionsFilter)
 export class ManagePlaylistUpdate {
   constructor(private playlistService: ManagePlaylistService) {}
 
