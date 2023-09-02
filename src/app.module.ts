@@ -4,6 +4,8 @@ import { ConfigModule } from '@nestjs/config';
 import configuration from './configuration';
 import { PrismaModule } from './modules/prisma/prisma.module';
 import { RedisModule } from './modules/redis/redis.module';
+import { LoggingModule } from './modules/logging/logging.module';
+import { DiscordLogger } from './modules/logging/loggers/discord.logger';
 
 @Module({
   imports: [
@@ -14,6 +16,7 @@ import { RedisModule } from './modules/redis/redis.module';
     BotModule,
     PrismaModule,
     RedisModule,
+    LoggingModule.register(new DiscordLogger()),
   ],
   controllers: [],
   providers: [],

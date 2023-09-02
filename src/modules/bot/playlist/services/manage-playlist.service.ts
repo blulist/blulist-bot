@@ -58,6 +58,7 @@ export class ManagePlaylistService {
       });
       return;
     }
+
     const playlist: Playlist | null = await this.playlistRepo.findbySlug(
       ctx.playlist.slug,
     );
@@ -70,12 +71,14 @@ export class ManagePlaylistService {
     }
     const audio: Audio = JSON.parse(audioString);
     const thumbnail = audio.thumb;
+
     const track = await this.trackRepo.create({
       playlistId: playlist.id,
       addedById: ctx.from.id,
       file_id: audio.file_id,
       title: audio.title || audio.file_name,
       file_unique_id: audio.file_unique_id,
+      duration: audio.duration || 0,
       performer:
         audio.performer == '<unknown>'
           ? 'N/A'
@@ -84,12 +87,14 @@ export class ManagePlaylistService {
       thumbnail: thumbnail ? thumbnail.file_id || '' : '',
     });
     const text = ` ✅ فایل <code>${track.performer}</code> با موفقیت به پلی لیست <u>${playlist.name}</u> با ایدی <code>${playlist.slug}</code> اضافه شد.`;
+
     await ctx.editMessageText(text, {
       parse_mode: 'HTML',
       reply_markup: {
         inline_keyboard: mainMenuInlineKeyboards,
       },
     });
+    await this.redisService.del(redisKey);
   }
 
   async myPlaylists(ctx: Context, userId: number): Promise<void> {

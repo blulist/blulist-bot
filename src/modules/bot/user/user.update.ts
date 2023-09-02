@@ -2,11 +2,13 @@ import { Ctx, Start, Update } from 'nestjs-telegraf';
 import { Context } from '../shared/interfaces/context.interface';
 import { mainMenuInlineKeyboards } from '../shared/keyboards/main.keyboard';
 import { UserService } from './services/user.service';
-import { UseFilters } from '@nestjs/common';
+import { UseFilters, UseInterceptors } from '@nestjs/common';
 import { ExceptionsFilter } from '../shared/filters/exceptions.filter';
+import { LoggingInterceptor } from '../shared/interceptors/logging.interceptor';
 
 @Update()
 @UseFilters(ExceptionsFilter)
+@UseInterceptors(LoggingInterceptor)
 export class UserUpdate {
   constructor(private userService: UserService) {}
   @Start()

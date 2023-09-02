@@ -48,6 +48,7 @@ model Track {
   thumbnail      String?  @default("")
   file_id        String
   playlistId     Int
+  duration       Int      @default(0)
   playlist       Playlist @relation(fields: [playlistId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   addedById      BigInt
   addedBy        User     @relation(fields: [addedById], references: [userId], onDelete: Cascade)

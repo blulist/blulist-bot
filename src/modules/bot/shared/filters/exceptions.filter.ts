@@ -6,10 +6,13 @@ import {
   TelegrafArgumentsHost,
 } from 'nestjs-telegraf';
 import { mainMenuInlineKeyboards } from '../keyboards/main.keyboard';
+import { LoggingService } from '../../../logging/logging.service';
 @Catch()
 export class ExceptionsFilter implements TelegrafExceptionFilter {
-  async catch(exception: any, host: TelegrafArgumentsHost): Promise<any> {
-    const ctx = host.getArgs()[0] as Context;
+  constructor(private logger: LoggingService) {}
+  async catch(exception: Error, host: ArgumentsHost): Promise<void> {
+    const telegrafHost = TelegrafArgumentsHost.create(host);
+    const ctx = telegrafHost.getContext<Context>();
     if (ctx.callbackQuery) {
       await ctx.answerCbQuery('خطایی رخ داد! لطفا مجدد امتحان کنید', {
         show_alert: true,
@@ -23,6 +26,6 @@ export class ExceptionsFilter implements TelegrafExceptionFilter {
       });
     }
     //send Logger
-    console.log(exception);
+    this.logger.error(exception.message, exception.stack);
   }
 }
