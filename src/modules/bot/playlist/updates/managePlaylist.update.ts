@@ -11,6 +11,7 @@ import {
   editPlaylistRegex,
   showMyPlaylistFilesRegex,
   sharePlaylistRegex,
+  deletePlaylistRegex,
 } from '../regexps/manage.regex';
 import { UseGuards } from '@nestjs/common';
 import { CheckPlaylistGuard } from '../../shared/guards/checkplaylist.guard';
@@ -113,5 +114,11 @@ export class ManagePlaylistUpdate {
         parse_mode: 'HTML',
       },
     );
+  }
+
+  @Action(deletePlaylistRegex)
+  @UseGuards(CheckPlaylistGuard)
+  async onDeletePlaylist(@Ctx() ctx: Context) {
+    await ctx.scene.enter('are_u_sure_for_deleting_playlist');
   }
 }

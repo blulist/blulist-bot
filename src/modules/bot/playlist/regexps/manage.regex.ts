@@ -20,3 +20,7 @@ export const showMyPlaylistFilesRegex = new RegExp(
 export const sharePlaylistRegex = new RegExp(
   `^${inlineCbKeys.SHARE_PLAYLIST}:(.*)$`,
 );
+
+export const deletePlaylistRegex = new RegExp(
+  `^${inlineCbKeys.DELETE_PLAYLIST}:(.*)$`,
+);

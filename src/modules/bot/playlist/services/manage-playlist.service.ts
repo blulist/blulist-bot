@@ -3,6 +3,7 @@ import { PlaylistRepository } from '../playlist.repository';
 import * as crypto from 'crypto';
 
 import {
+  backToMainMenuPlaylist,
   editPlaylistKeyboard,
   playlistKeyboard,
 } from '../keyboards/inline_keyboards/playlist.keyboard';
@@ -99,17 +100,29 @@ export class ManagePlaylistService {
       },
     ]);
     await ctx.deleteMessage();
-    await ctx.sendMessage(
-      `
+    if (!playlists.length) {
+      await ctx.sendMessage(
+        `• در حال حاضر پلی لیستی ندارید !
+از دکمه های زیر یک پلی لیست ایجاد کنید:
+`,
+        {
+          reply_markup: {
+            inline_keyboard: mainMenuInlineKeyboards,
+          },
+        },
+      );
+    } else
+      await ctx.sendMessage(
+        `
 تعداد پلی لیست ها: ${keyboards.length}
 یک پلی لیست رو جهت مدیریت انتخاب کنید:
     `,
-      {
-        reply_markup: {
-          inline_keyboard: keyboards,
+        {
+          reply_markup: {
+            inline_keyboard: keyboards,
+          },
         },
-      },
-    );
+      );
   }
 
   async showPlaylist(ctx: Context, playlistSlug: string) {
@@ -152,7 +165,13 @@ export class ManagePlaylistService {
     });
     await ctx.reply(
       `• <b>${newName}</b> به عنوان نام جدید پلی لیست <code>${playlistSlug}</code> ثبت شد.`,
-      { reply_to_message_id: ctx.message.message_id, parse_mode: 'HTML' },
+      {
+        reply_to_message_id: ctx.message.message_id,
+        parse_mode: 'HTML',
+        reply_markup: {
+          inline_keyboard: backToMainMenuPlaylist(playlistSlug),
+        },
+      },
     );
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -173,6 +192,9 @@ export class ManagePlaylistService {
       {
         parse_mode: 'HTML',
         reply_to_message_id: ctx.message.message_id,
+        reply_markup: {
+          inline_keyboard: backToMainMenuPlaylist(playlistSlug),
+        },
       },
     );
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -241,5 +263,27 @@ export class ManagePlaylistService {
         },
       },
     );
+  }
+
+  async deletePlaylist(ctx: Context) {
+    try {
+      await this.playlistRepo.deleteOneBySlug(ctx.playlist.slug);
+      await ctx.editMessageText(
+        `✅  پلی لیست <b>${ctx.playlist.name}</b> با آیدی <code>${ctx.playlist.slug}</code> با موفقیت حذف گردید.`,
+        {
+          parse_mode: 'HTML',
+          reply_markup: {
+            inline_keyboard: mainMenuInlineKeyboards,
+          },
+        },
+      );
+    } catch (e) {
+      await ctx.editMessageText(`خطا در حذف پلی لیست!`, {
+        parse_mode: 'HTML',
+        reply_markup: {
+          inline_keyboard: mainMenuInlineKeyboards,
+        },
+      });
+    }
   }
 }

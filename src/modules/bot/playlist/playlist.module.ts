@@ -9,6 +9,7 @@ import { EditPlnameScenes } from './scenes/edit-plname.scenes';
 import { EditPlBannerScenes } from './scenes/edit-plBanner.scenes';
 import { BackAndCancelHandlerUpdate } from './updates/back-and-cancel-handler.update';
 import { TrackModule } from '../track/track.module';
+import { DeletePlaylistScene } from './scenes/delete-playlist.scene';
 
 const exportAndProviders = [PlaylistRepository];
 @Module({
@@ -19,6 +20,7 @@ const exportAndProviders = [PlaylistRepository];
     BackAndCancelHandlerUpdate,
     SendPlnameScenes,
     EditPlnameScenes,
+    DeletePlaylistScene,
     EditPlBannerScenes,
     FileEvent,
     ...exportAndProviders,

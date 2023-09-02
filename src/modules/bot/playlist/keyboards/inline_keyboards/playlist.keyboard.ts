@@ -28,7 +28,7 @@ export const playlistKeyboard = (
     [
       {
         text: '🗑️ حذف',
-        callback_data: 'delete_playlist',
+        callback_data: inlineCbKeys.DELETE_PLAYLIST + `:${playlistSlug}`,
       },
     ],
     [
@@ -60,6 +60,14 @@ export const editPlaylistKeyboard = (
         callback_data: inlineCbKeys.TOGGLE_PLAYLIST_STATUS + `:${playlistSlug}`,
       },
     ],
+    ...backToMainMenuPlaylist(playlistSlug),
+  ];
+};
+
+export function backToMainMenuPlaylist(
+  playlistSlug: string,
+): InlineKeyboardButton[][] {
+  return [
     [
       {
         text: '> بازگشت',
@@ -67,4 +75,4 @@ export const editPlaylistKeyboard = (
       },
     ],
   ];
-};
+}

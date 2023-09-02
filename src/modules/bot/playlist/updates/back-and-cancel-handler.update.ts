@@ -9,9 +9,10 @@ export class BackAndCancelHandlerUpdate {
   constructor(private managePlaylistService: ManagePlaylistService) {}
   @Action(backToMainPlaylistRegex)
   async onBackToMainPlaylist(@Ctx() ctx: Context) {
-    await ctx.editMessageReplyMarkup({
-      inline_keyboard: playlistKeyboard(ctx.match[1]),
-    });
+    await this.managePlaylistService.showPlaylist(ctx, ctx.match[1]);
+    // await ctx.editMessageReplyMarkup({
+    //   inline_keyboard: playlistKeyboard(ctx.match[1]),
+    // });
   }
 
   @Action('cancel')
@@ -24,5 +25,12 @@ export class BackAndCancelHandlerUpdate {
   @Action('backTo:myPlaylists')
   onBackToMyPlaylists(@Ctx() ctx: Context, @Sender('id') id) {
     return this.managePlaylistService.myPlaylists(ctx, id);
+  }
+
+  @Action('soon')
+  async onSoonButton(@Ctx() ctx: Context) {
+    await ctx.answerCbQuery('این بخش به زودی اضافه میشه', {
+      show_alert: true,
+    });
   }
 }

@@ -62,4 +62,8 @@ export class PlaylistRepository {
       },
     });
   }
+
+  async deleteOneBySlug(slug: string) {
+    return this.db.playlist.delete({ where: { slug } });
+  }
 }
