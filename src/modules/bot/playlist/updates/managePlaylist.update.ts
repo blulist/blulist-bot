@@ -95,9 +95,11 @@ export class ManagePlaylistUpdate {
 • خیلی خوشحالیم که پلتفرم مارو انتخاب کرده اید ! 😍
 برای اشتراک گذاری پلی لیـست کافیه یکی از لینک های زیر رو به دوستان یا در پلفترم های مختلف به اشتراک بگذارید:
 
-▸ x(twitter): <code>https://t.me/p7ify_bot?start=${slug}_x</code>
-▸ instagram: <code>https://t.me/p7ify_bot?start=${slug}_insta</code>
-▸ telegram: <code>https://t.me/p7ify_bot?start=${slug}_telegram</code>
+▸ X(twitter): <code>https://t.me/p7ify_bot?start=${slug}_x</code>
+
+▸ Instagram: <code>https://t.me/p7ify_bot?start=${slug}_insta</code>
+
+▸ Telegram: <code>https://t.me/p7ify_bot?start=${slug}_telegram</code>
 
 و غیره:
 <code>https://t.me/p7ify_bot?start=${slug}</code>
