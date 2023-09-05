@@ -110,22 +110,18 @@ export class ManagePlaylistUpdate {
 • خیلی خوشحالیم که پلتفرم مارو انتخاب کرده اید ! 😍
 برای اشتراک گذاری پلی لیـست کافیه یکی از لینک های زیر رو به دوستان یا در پلفترم های مختلف به اشتراک بگذارید:
 
-🤖 **از طریق ربات:**
-- [x](https://t.me/${BotInfo.UsernameWithoutPerfix}?start=${slug}_x)
-- [Instagram](https://t.me/${BotInfo.UsernameWithoutPerfix}?start=${slug}_insta)
-- [Telegram](https://t.me/${BotInfo.UsernameWithoutPerfix}?start=${slug}_telegram)
-- https://t.me/${BotInfo.UsernameWithoutPerfix}?start=${slug}
+<b>🤖 از طریـق ربات: </b>
+https://t.me/${BotInfo.UsernameWithoutPerfix}?start=${slug}
 
-🌐 **و برای سایت:**
-- [X](https://blulist.ir/playlists/${slug}?ref=x)
-- [Instagram](https://blulist.ir/playlists/${slug}?ref=insta)
-- [Telegram](https://blulist.ir/playlists/${slug}?ref=telegram)
-- https://blulist.ir/playlists/${slug}
+<b>🌐 و برای سایت:</b>
+
+https://blulist.ir/playlists/${slug}
+ 
 
 ${BotInfo.FooterMessages}
-  `,
+    `,
       {
-        parse_mode: 'Markdown',
+        parse_mode: 'HTML',
       },
     );
   }

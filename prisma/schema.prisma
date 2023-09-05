@@ -6,31 +6,38 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
+enum UserPermission {
+  OWNER
+  MANAGER
+  MEMBER
+}
+
 model User {
-  id        Int        @id @default(autoincrement())
-  userId    BigInt     @unique
-  isAdmin   Boolean    @default(false)
-  playlists Playlist[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  tracks    Track[]
-  like      Like[]
+  id          Int              @id @default(autoincrement())
+  userId      BigInt           @unique
+  isAdmin     Boolean          @default(false)
+  permissions UserPermission[] @default([MEMBER])
+  playlists   Playlist[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  tracks      Track[]
+  like        Like[]
 
   @@index([userId])
 }
 
 model Playlist {
-  id        Int      @id @default(autoincrement())
-  ownerId   BigInt
-  owner     User     @relation(fields: [ownerId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
-  tracks    Track[]
+  id      Int     @id @default(autoincrement())
+  ownerId BigInt
+  owner   User    @relation(fields: [ownerId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+  tracks  Track[]
+
   slug      String   @unique @db.VarChar(16)
   name      String   @db.VarChar(30)
-  // likes     Int      @default(0) @db.Int
   viewCount Int      @default(0)
   bannerId  String   @default("") @db.VarChar(90)
   isPrivate Boolean  @default(false)
