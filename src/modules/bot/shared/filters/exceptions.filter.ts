@@ -14,16 +14,20 @@ export class ExceptionsFilter implements TelegrafExceptionFilter {
     const telegrafHost = TelegrafArgumentsHost.create(host);
     const ctx = telegrafHost.getContext<Context>();
     if (ctx.callbackQuery) {
-      await ctx.answerCbQuery('خطایی رخ داد! لطفا مجدد امتحان کنید', {
-        show_alert: true,
-      });
+      try {
+        await ctx.answerCbQuery('خطایی رخ داد! لطفا مجدد امتحان کنید', {
+          show_alert: true,
+        });
+      } catch {}
     } else {
-      await ctx.sendMessage('خطایی رخ داد! لطفا مجدد امتحان کنید', {
-        parse_mode: 'HTML',
-        reply_markup: {
-          inline_keyboard: mainMenuInlineKeyboards,
-        },
-      });
+      try {
+        await ctx.sendMessage('خطایی رخ داد! لطفا مجدد امتحان کنید', {
+          parse_mode: 'HTML',
+          reply_markup: {
+            inline_keyboard: mainMenuInlineKeyboards,
+          },
+        });
+      } catch {}
     }
     //send Logger
     this.logger.error(exception.message, exception.stack);
