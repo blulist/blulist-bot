@@ -16,14 +16,11 @@ export class CheckPlaylistGuard implements CanActivate {
         playlistSlug,
         true,
       )) as PlaylistWithTracks | null;
-    if (!playlist) {
-      if (ctx.callbackQuery) {
-        return ctx.answerCbQuery('پلی لیست معتبر نیست', { show_alert: true });
-      } else
-        await ctx.reply('پلی لیست معتبر نیست', {
-          reply_to_message_id: ctx.message.message_id,
-        });
-    }
+
+    const msg = 'پلی لیست معتبر نیست';
+
+    if (!playlist) throw new TelegrafException(msg);
+
     ctx.playlist = playlist;
     return true;
   }

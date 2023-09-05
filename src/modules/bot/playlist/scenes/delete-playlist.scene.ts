@@ -1,11 +1,13 @@
 import { Action, Ctx, Scene, SceneEnter } from 'nestjs-telegraf';
 import { Context } from '../../shared/interfaces/context.interface';
-import { UseGuards } from '@nestjs/common';
+import { UseFilters, UseGuards } from '@nestjs/common';
 import { CheckPlaylistGuard } from '../../shared/guards/checkplaylist.guard';
 import { ManagePlaylistService } from '../services/manage-playlist.service';
 import { checkPlaylistPermission } from '../../shared/guards/playlist-permission.guard';
+import { ExceptionsFilter } from '../../shared/filters/exceptions.filter';
 
 @Scene('are_u_sure_for_deleting_playlist')
+@UseFilters(ExceptionsFilter)
 export class DeletePlaylistScene {
   constructor(private managePlaylistService: ManagePlaylistService) {}
   @SceneEnter()

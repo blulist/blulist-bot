@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module';
 import { PlaylistModule } from './playlist/playlist.module';
 import { SessionMiddleware } from './shared/middlewares/session.middleware';
 import { TrackModule } from './track/track.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { TrackModule } from './track/track.module';
     UserModule,
     PlaylistModule,
     TrackModule,
+    AdminModule,
   ],
   providers: [],
 })

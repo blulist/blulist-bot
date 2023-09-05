@@ -85,6 +85,29 @@ export class PlaylistRepository {
     });
   }
 
+  getAllPlaylistCount(isPrivate: boolean | null = null) {
+    if (isPrivate === null) return this.db.playlist.count({});
+    else
+      return this.db.playlist.count({
+        where: {
+          isPrivate: isPrivate,
+        },
+      });
+  }
+
+  async getTodayPlaylistCount(): Promise<number> {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set the time to the beginning of the day
+    const count = await this.db.playlist.count({
+      where: {
+        createdAt: {
+          gte: today,
+        },
+      },
+    });
+    return count;
+  }
+
   removeLike(playlistId: number, userId: number): Promise<Like> {
     return this.db.like.delete({
       where: {
