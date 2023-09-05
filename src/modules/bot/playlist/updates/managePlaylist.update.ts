@@ -17,6 +17,7 @@ import { UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
 import { CheckPlaylistGuard } from '../../shared/guards/checkplaylist.guard';
 import { ExceptionsFilter } from '../../shared/filters/exceptions.filter';
 import { LoggingInterceptor } from '../../shared/interceptors/logging.interceptor';
+import { BotInfo } from '../../shared/constants/bot.constant';
 
 @Update()
 @UseFilters(ExceptionsFilter)
@@ -109,22 +110,22 @@ export class ManagePlaylistUpdate {
 • خیلی خوشحالیم که پلتفرم مارو انتخاب کرده اید ! 😍
 برای اشتراک گذاری پلی لیـست کافیه یکی از لینک های زیر رو به دوستان یا در پلفترم های مختلف به اشتراک بگذارید:
 
-▸ X(twitter): <code>https://t.me/p7ify_bot?start=${slug}_x</code>
+🤖 **از طریق ربات:**
+- [x](https://t.me/${BotInfo.UsernameWithoutPerfix}?start=${slug}_x)
+- [Instagram](https://t.me/${BotInfo.UsernameWithoutPerfix}?start=${slug}_insta)
+- [Telegram](https://t.me/${BotInfo.UsernameWithoutPerfix}?start=${slug}_telegram)
+- https://t.me/${BotInfo.UsernameWithoutPerfix}?start=${slug}
 
-▸ Instagram: <code>https://t.me/p7ify_bot?start=${slug}_insta</code>
+🌐 **و برای سایت:**
+- [X](https://blulist.ir/playlists/${slug}?ref=x)
+- [Instagram](https://blulist.ir/playlists/${slug}?ref=insta)
+- [Telegram](https://blulist.ir/playlists/${slug}?ref=telegram)
+- https://blulist.ir/playlists/${slug}
 
-▸ Telegram: <code>https://t.me/p7ify_bot?start=${slug}_telegram</code>
-
-و غیره:
-<code>https://t.me/p7ify_bot?start=${slug}</code>
-
-❕ جهت کپی روی یکی از لینک ها کلیک کنید.
-
-🐳 BluList - بلـولیـست
-@bluListBot
-    `,
+${BotInfo.FooterMessages}
+  `,
       {
-        parse_mode: 'HTML',
+        parse_mode: 'Markdown',
       },
     );
   }

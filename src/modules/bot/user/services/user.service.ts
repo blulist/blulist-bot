@@ -3,6 +3,7 @@ import { Context } from '../../shared/interfaces/context.interface';
 import { PlaylistRepository } from '../../playlist/playlist.repository';
 import { PlaylistWithTracks } from '../../shared/interfaces/playlist.interface';
 import { userPlaylistKeyboard } from '../keyboards/inline_keyboards/userPlaylist.keyboard';
+import { BotInfo } from '../../shared/constants/bot.constant';
 
 @Injectable()
 export class UserService {
@@ -20,10 +21,11 @@ export class UserService {
         `
 • متاسفانه پلی لیست مورد نظر یافت نشد!
 
-شما هم میتونید با بلـولـیست پلی لیست های خودتون رو داشته و به اشتراک بگذارید !
-برای شروع /start رو بزنید
+*شما هم میتونید با ${BotInfo.NameFa} پلی لیست های خودتون رو داشته و به اشتراک بگذارید !
+برای شروع /start رو بزنید*
       `,
         {
+          parse_mode: 'Markdown',
           reply_to_message_id: ctx.message.message_id,
         },
       );
@@ -38,11 +40,10 @@ export class UserService {
 ↲ تعداد بازدید: ${playlist.viewCount}
 
 
-شما هم میتونید با بلـولـیست پلی لیست های خودتون رو داشته و به اشتراک بگذارید !
-برای شروع /start رو بزنید
+<b>شما هم میتونید با ${BotInfo.NameFa} پلی لیست های خودتون رو داشته و به اشتراک بگذارید !
+برای شروع /start رو بزنید</b>
 
-🐳 BluList - بلـولیـست
-@bluListBot
+${BotInfo.FooterMessages}
 `;
 
     const likeCounts = await this.playlistRepo.getPlaylistLikesCount(

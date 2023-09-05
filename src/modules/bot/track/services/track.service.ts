@@ -4,6 +4,7 @@ import { InlineKeyboardButton } from '../../shared/interfaces/keyboard.interface
 import { TrackRepository } from '../track.repository';
 import { Track } from '../../shared/interfaces/track.interface';
 import { PlaylistWithTracks } from '../../shared/interfaces/playlist.interface';
+import { BotInfo } from '../../shared/constants/bot.constant';
 
 @Injectable()
 export class TrackService {
@@ -39,9 +40,8 @@ export class TrackService {
     await ctx.sendAudio(fileUrl.file_id, {
       reply_markup: { inline_keyboard: buttons },
       caption: `
-آپلود شده توسط: <a href="tg://user?id=${track.addedById}">این کاربر</a>      
-BluList - بلـولیـست
-@bluListBot `,
+${BotInfo.FooterMessages}
+ `,
       parse_mode: 'HTML',
     });
   }
@@ -72,9 +72,7 @@ BluList - بلـولیـست
 
       await ctx.sendAudio(fileUrl.file_id, {
         reply_markup: { inline_keyboard: buttons },
-        caption: `
-BluList - بلـولیـست
-@bluListBot `,
+        caption: BotInfo.FooterMessages,
         parse_mode: 'HTML',
       });
     }

@@ -5,6 +5,7 @@ import { UserService } from './services/user.service';
 import { UseFilters, UseInterceptors } from '@nestjs/common';
 import { ExceptionsFilter } from '../shared/filters/exceptions.filter';
 import { LoggingInterceptor } from '../shared/interceptors/logging.interceptor';
+import { BotInfo } from '../shared/constants/bot.constant';
 
 @Update()
 @UseFilters(ExceptionsFilter)
@@ -22,10 +23,11 @@ export class UserUpdate {
     }
     await ctx.reply(
       `
-    سلام به ربـات بلـولیـست خوش آمدید 🐳
-یک پلی لیست با استفاده از کیبورد زیر بسازید و سپس موزیک های خودتون رو  فوروارد کنید.
+    سلام به ربـات ${BotInfo.NameFa} خوش آمدید 🐳
+*یک پلی لیست با استفاده از کیبورد زیر بسازید و سپس موزیک های خودتون رو  فوروارد کنید.*
     `,
       {
+        parse_mode: 'Markdown',
         reply_markup: {
           inline_keyboard: mainMenuInlineKeyboards,
           one_time_keyboard: true,

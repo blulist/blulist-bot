@@ -6,6 +6,7 @@ import { PrismaModule } from './modules/prisma/prisma.module';
 import { RedisModule } from './modules/redis/redis.module';
 import { LoggingModule } from './modules/logging/logging.module';
 import { DiscordLogger } from './modules/logging/loggers/discord.logger';
+import { TelegramModule } from './modules/http/telegram/telegram.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { DiscordLogger } from './modules/logging/loggers/discord.logger';
     PrismaModule,
     RedisModule,
     LoggingModule.register(new DiscordLogger()),
+    TelegramModule,
   ],
   controllers: [],
   providers: [],
