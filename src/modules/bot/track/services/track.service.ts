@@ -34,10 +34,9 @@ export class TrackService {
     }
     await ctx.answerCbQuery('در حال ارسال فایل...');
 
-    const fileUrl = await ctx.telegram.getFile(track.file_id);
     await ctx.sendChatAction('upload_document');
 
-    await ctx.sendAudio(fileUrl.file_id, {
+    await ctx.sendAudio(track.file_id, {
       reply_markup: { inline_keyboard: buttons },
       caption: `
 ${BotInfo.FooterMessages}
@@ -67,10 +66,9 @@ ${BotInfo.FooterMessages}
         ]);
       }
 
-      const fileUrl = await ctx.telegram.getFile(track.file_id);
       await ctx.sendChatAction('upload_document');
 
-      await ctx.sendAudio(fileUrl.file_id, {
+      await ctx.sendAudio(track.file_id, {
         reply_markup: { inline_keyboard: buttons },
         caption: BotInfo.FooterMessages,
         parse_mode: 'HTML',
