@@ -3,7 +3,7 @@ import { Context } from '../../shared/interfaces/context.interface';
 import { InlineKeyboardButton } from '../../shared/interfaces/keyboard.interface';
 import { TrackRepository } from '../track.repository';
 import { Track } from '../../shared/interfaces/track.interface';
-import { PlaylistWithTracks } from '../../shared/interfaces/playlist.interface';
+import { PlaylistWithCounts } from '../../shared/interfaces/playlist.interface';
 import { BotInfo } from '../../shared/constants/bot.constant';
 
 @Injectable()
@@ -45,9 +45,9 @@ ${BotInfo.FooterMessages}
     });
   }
   async sendAllTracks(ctx: Context, userId: number) {
-    const playlist = ctx.playlist as PlaylistWithTracks;
+    const playlist = ctx.playlist as PlaylistWithCounts;
     const isAdmin = Number(playlist.ownerId) === userId;
-    if (!playlist.tracks.length) {
+    if (!playlist._count.tracks) {
       await ctx.answerCbQuery('فایلی در پلی لیست یافت نشد', {
         show_alert: true,
       });
@@ -55,24 +55,25 @@ ${BotInfo.FooterMessages}
     }
     await ctx.answerCbQuery('درحال ارسال فایل ها...');
 
-    for (const track of playlist.tracks) {
-      const buttons: InlineKeyboardButton[][] = [[]];
-      if (isAdmin) {
-        buttons.push([
-          {
-            text: 'حذف  فایل از پلی لیست',
-            callback_data: `removeTrack:${ctx.playlist.slug}:${track.uniqueId}`,
-          },
-        ]);
-      }
-
-      await ctx.sendChatAction('upload_document');
-
-      await ctx.sendAudio(track.file_id, {
-        reply_markup: { inline_keyboard: buttons },
-        caption: BotInfo.FooterMessages,
-        parse_mode: 'HTML',
-      });
-    }
+    //todo
+    // for (const track of playlist.tracks) {
+    //   const buttons: InlineKeyboardButton[][] = [[]];
+    //   if (isAdmin) {
+    //     buttons.push([
+    //       {
+    //         text: 'حذف  فایل از پلی لیست',
+    //         callback_data: `removeTrack:${ctx.playlist.slug}:${track.uniqueId}`,
+    //       },
+    //     ]);
+    //   }
+    //
+    //   await ctx.sendChatAction('upload_document');
+    //
+    //   await ctx.sendAudio(track.file_id, {
+    //     reply_markup: { inline_keyboard: buttons },
+    //     caption: BotInfo.FooterMessages,
+    //     parse_mode: 'HTML',
+    //   });
+    // }
   }
 }

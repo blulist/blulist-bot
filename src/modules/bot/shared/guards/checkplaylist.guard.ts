@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { TelegrafException, TelegrafExecutionContext } from 'nestjs-telegraf';
 import { Context } from '../interfaces/context.interface';
 import { PlaylistRepository } from '../../playlist/playlist.repository';
-import { Playlist, PlaylistWithTracks } from '../interfaces/playlist.interface';
+import { Playlist, PlaylistWithCounts } from '../interfaces/playlist.interface';
 
 @Injectable()
 export class CheckPlaylistGuard implements CanActivate {
@@ -11,11 +11,11 @@ export class CheckPlaylistGuard implements CanActivate {
     const ctxCreate = TelegrafExecutionContext.create(context);
     const ctx = ctxCreate.getContext<Context>();
     const playlistSlug = ctx.match[1];
-    const playlist: PlaylistWithTracks | null =
-      (await this.playlistRepo.findbySlug(
+    const playlist: PlaylistWithCounts | null =
+      (await this.playlistRepo.findBySlug(
         playlistSlug,
         true,
-      )) as PlaylistWithTracks | null;
+      )) as PlaylistWithCounts | null;
 
     const msg = 'پلی لیست معتبر نیست';
 

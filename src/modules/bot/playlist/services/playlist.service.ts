@@ -3,7 +3,7 @@ import { Context } from '../../shared/interfaces/context.interface';
 import { PlaylistRepository } from '../playlist.repository';
 import {
   Like,
-  PlaylistWithTracks,
+  PlaylistWithCounts,
 } from '../../shared/interfaces/playlist.interface';
 import { playlistKeyboard } from '../keyboards/inline_keyboards/playlist.keyboard';
 import { userPlaylistKeyboard } from '../../user/keyboards/inline_keyboards/userPlaylist.keyboard';
@@ -38,14 +38,16 @@ export class PlaylistService {
     const likeCounts = await this.playlistRepo.getPlaylistLikesCount(
       ctx.playlist.id,
     );
-
+    const buttons =
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      ctx.update.callback_query.message.reply_markup.inline_keyboard;
+    const firstButtons = buttons[0];
+    firstButtons[1].text = `❤️ ${likeCounts}`;
     await ctx.answerCbQuery(msg, { show_alert: true });
-    // await ctx.editMessageReplyMarkup({
-    //   inline_keyboard: userPlaylistKeyboard(
-    //     ctx.playlist as PlaylistWithTracks,
-    //     likeCounts,
-    //   ),
-    // });
+    await ctx.editMessageReplyMarkup({
+      inline_keyboard: buttons,
+    });
 
     // add like
   }

@@ -13,7 +13,7 @@ import { Audio } from 'telegraf/types';
 import { TrackRepository } from '../../track/track.repository';
 import {
   Playlist,
-  PlaylistWithTracks,
+  PlaylistWithCounts,
 } from '../../shared/interfaces/playlist.interface';
 import { getRandomString } from '../../../../shared/utils/random.util';
 import { InlineKeyboardButton } from '../../shared/interfaces/keyboard.interface';
@@ -60,7 +60,7 @@ export class ManagePlaylistService {
       return;
     }
 
-    const playlist: Playlist | null = await this.playlistRepo.findbySlug(
+    const playlist: Playlist | null = await this.playlistRepo.findBySlug(
       ctx.playlist.slug,
     );
     if (!playlist) {
@@ -168,10 +168,10 @@ export class ManagePlaylistService {
   }
 
   async showPlaylist(ctx: Context, playlistSlug: string) {
-    const playlist: PlaylistWithTracks = (await this.playlistRepo.findbySlug(
+    const playlist: PlaylistWithCounts = (await this.playlistRepo.findBySlug(
       playlistSlug,
       true,
-    )) as PlaylistWithTracks;
+    )) as PlaylistWithCounts;
     if (!playlist) return ctx.answerCbQuery(`❌ پلی لیست معتبر نیست`);
     await ctx.deleteMessage();
     if (playlist.bannerId) {
@@ -245,8 +245,8 @@ export class ManagePlaylistService {
   }
 
   async toggleStatus(ctx: Context) {
-    let playlist: PlaylistWithTracks = ctx.playlist as PlaylistWithTracks;
-    playlist = await this.playlistRepo.updateBySlug(playlist.slug, {
+    const playlist: PlaylistWithCounts = ctx.playlist as PlaylistWithCounts;
+    const { isPrivate } = await this.playlistRepo.updateBySlug(playlist.slug, {
       isPrivate: !playlist.isPrivate,
     });
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -268,9 +268,7 @@ export class ManagePlaylistService {
         },
       });
     await ctx.answerCbQuery(
-      `وضعیت مشاهده به ${
-        playlist.isPrivate ? '🔐 خصوصی' : '🔓 عمومی'
-      } تغییر کرد. `,
+      `وضعیت مشاهده به ${isPrivate ? '🔐 خصوصی' : '🔓 عمومی'} تغییر کرد. `,
     );
   }
   async showMyPlaylistFiles(ctx: Context) {

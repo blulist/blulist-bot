@@ -5,7 +5,7 @@ import {
   Playlist,
   PlaylistCreateInput,
   PlaylistUpdateInput,
-  PlaylistWithTracks,
+  PlaylistWithCounts,
 } from '../shared/interfaces/playlist.interface';
 
 @Injectable()
@@ -15,16 +15,16 @@ export class PlaylistRepository {
   create(input: PlaylistCreateInput): Promise<Playlist> {
     return this.db.playlist.create({ data: input });
   }
-  findbySlug(
+  findBySlug(
     slug: string,
-    inclueTracks = false,
-  ): Promise<Playlist | PlaylistWithTracks | null> {
+    includeCounts = false,
+  ): Promise<Playlist | PlaylistWithCounts | null> {
     return this.db.playlist.findUnique({
       where: {
         slug,
       },
       include: {
-        tracks: inclueTracks,
+        tracks: includeCounts,
         _count: {
           select: {
             likes: true,
@@ -40,9 +40,6 @@ export class PlaylistRepository {
         slug,
       },
       data: input,
-      include: {
-        tracks: true,
-      },
     });
   }
   findAllByUserId(
