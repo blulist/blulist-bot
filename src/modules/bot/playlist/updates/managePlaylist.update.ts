@@ -12,6 +12,7 @@ import {
   showMyPlaylistFilesRegex,
   sharePlaylistRegex,
   deletePlaylistRegex,
+  showPlaylistsRegex,
 } from '../regexps/manage.regex';
 import { UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
 import { CheckPlaylistGuard } from '../../shared/guards/checkplaylist.guard';
@@ -51,7 +52,7 @@ export class ManagePlaylistUpdate {
     await this.playlistService.addTrack(ctx, rediskey);
   }
 
-  @Action(inlineCbKeys.MY_PLAYLISTS)
+  @Action(showPlaylistsRegex)
   async onMyPlayLists(@Ctx() ctx: Context, @Sender('id') id: number) {
     await this.playlistService.myPlaylists(ctx, id);
   }

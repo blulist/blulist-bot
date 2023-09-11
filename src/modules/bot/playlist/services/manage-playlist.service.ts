@@ -19,6 +19,7 @@ import { getRandomString } from '../../../../shared/utils/random.util';
 import { InlineKeyboardButton } from '../../shared/interfaces/keyboard.interface';
 import { getShowPlaylistMsg } from '../messages/showPlaylist.msg';
 import { mainMenuInlineKeyboards } from '../../shared/keyboards/main.keyboard';
+import { inlineCbKeys } from '../../shared/constants/callbacks.constant';
 @Injectable()
 export class ManagePlaylistService {
   constructor(
@@ -98,15 +99,22 @@ export class ManagePlaylistService {
   }
 
   async myPlaylists(ctx: Context, userId: number): Promise<void> {
-    const playlists = await this.playlistRepo.findAllAUser(userId);
+    const page = Number(ctx.match[1]) || 1;
+    const perPage = 1;
 
-    const keyboards = playlists.map((pl) => [
-      {
-        text: `${pl.isPrivate ? '🔐' : '🔓'}〡${pl.name}〡${pl.slug}`,
-        callback_data: `show_playlist:${pl.slug}`,
-      },
-    ]);
-    await ctx.deleteMessage();
+    const totalCount: number = await this.playlistRepo.getCountsByUserId(
+      userId,
+    );
+
+    const totalPages = Math.ceil(totalCount / perPage);
+
+    const skip = (page - 1) * perPage;
+
+    const playlists: Playlist[] = await this.playlistRepo.findAllByUserId(
+      userId,
+      page,
+      perPage,
+    );
     if (!playlists.length) {
       await ctx.sendMessage(
         `• در حال حاضر پلی لیستی ندارید !
@@ -118,18 +126,45 @@ export class ManagePlaylistService {
           },
         },
       );
-    } else
-      await ctx.sendMessage(
-        `
-تعداد پلی لیست ها: ${keyboards.length}
+      return;
+    }
+
+    const paginationKeyboard: InlineKeyboardButton[] = [];
+    if (page > 1) {
+      paginationKeyboard.push({
+        text: '⭀ صفحه قبلی',
+        callback_data: `${inlineCbKeys.MY_PLAYLISTS}:${page - 1}`,
+      });
+    }
+    if (page < totalPages) {
+      paginationKeyboard.push({
+        text: '⥱ صفحه بعدی',
+        callback_data: `${inlineCbKeys.MY_PLAYLISTS}:${page + 1}`,
+      });
+    }
+
+    const keyboards: InlineKeyboardButton[][] = playlists.map((pl) => [
+      {
+        text: `${pl.isPrivate ? '🔐' : '🔓'}〡${pl.name}〡${pl.slug}`,
+        callback_data: `show_playlist:${pl.slug}`,
+      },
+    ]);
+
+    keyboards.push(paginationKeyboard);
+
+    await ctx.deleteMessage();
+
+    await ctx.sendMessage(
+      `
+تعداد پلی لیست ها: ${totalCount}
 یک پلی لیست رو جهت مدیریت انتخاب کنید:
     `,
-        {
-          reply_markup: {
-            inline_keyboard: keyboards,
-          },
+      {
+        reply_markup: {
+          inline_keyboard: keyboards,
         },
-      );
+      },
+    );
   }
 
   async showPlaylist(ctx: Context, playlistSlug: string) {

@@ -3,7 +3,10 @@ import { inlineCbKeys } from '../constants/callbacks.constant';
 
 export const mainMenuInlineKeyboards: InlineKeyboardButton[][] = [
   [
-    { text: '🗃️ پلی لیست های من', callback_data: inlineCbKeys.MY_PLAYLISTS },
+    {
+      text: '🗃️ پلی لیست های من',
+      callback_data: inlineCbKeys.MY_PLAYLISTS + ':1',
+    },
     {
       text: '⚙️ ساخت پلی لیست',
       callback_data: inlineCbKeys.CREATE_PLAYLIST,

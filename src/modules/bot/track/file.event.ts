@@ -17,7 +17,7 @@ export class FileEvent {
   async onSendAudio(@Ctx() ctx: Context, @Message('audio') audio: any) {
     const key: string = getRandomString(12);
     this.redis.setex(key, 60, JSON.stringify(audio));
-    const playlists = await this.playlistRepo.findAllAUser(ctx.from.id);
+    const playlists = await this.playlistRepo.findAllByUserId(ctx.from.id, 1);
     const btns: InlineKeyboardButton[][] = playlists.map((pl) => [
       {
         text: `${pl.name} - ${pl.slug}`,

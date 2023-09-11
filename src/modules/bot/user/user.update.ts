@@ -1,11 +1,12 @@
-import { Ctx, Start, Update } from 'nestjs-telegraf';
+import { Action, Ctx, Start, Update } from 'nestjs-telegraf';
 import { Context } from '../shared/interfaces/context.interface';
 import { mainMenuInlineKeyboards } from '../shared/keyboards/main.keyboard';
 import { UserService } from './services/user.service';
-import { UseFilters, UseInterceptors } from '@nestjs/common';
+import { UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ExceptionsFilter } from '../shared/filters/exceptions.filter';
 import { LoggingInterceptor } from '../shared/interceptors/logging.interceptor';
 import { BotInfo } from '../shared/constants/bot.constant';
+import { CheckPlaylistGuard } from '../shared/guards/checkplaylist.guard';
 
 @Update()
 @UseFilters(ExceptionsFilter)
@@ -36,5 +37,11 @@ export class UserUpdate {
         },
       },
     );
+  }
+
+  @Action(/show_user_playlist:(.*):(.*)/)
+  @UseGuards(CheckPlaylistGuard)
+  onShowPlaylist(@Ctx() ctx: Context) {
+    console.log(ctx.match);
   }
 }

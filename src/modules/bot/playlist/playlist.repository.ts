@@ -40,8 +40,25 @@ export class PlaylistRepository {
       },
     });
   }
-  findAllAUser(userId: number): Promise<Array<Playlist>> {
+  findAllByUserId(
+    userId: number,
+    page: number,
+    perPage = 10,
+  ): Promise<Array<Playlist>> {
     return this.db.playlist.findMany({
+      where: {
+        ownerId: userId,
+      },
+      take: perPage,
+      skip: (page - 1) * perPage,
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
+  getCountsByUserId(userId: number): Promise<number> {
+    return this.db.playlist.count({
       where: {
         ownerId: userId,
       },
