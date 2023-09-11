@@ -250,7 +250,7 @@ export class ManagePlaylistService {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const photo = ctx.callbackQuery.message.photo;
-
+    playlist.isPrivate = isPrivate;
     if (photo && photo.length) {
       await ctx.editMessageCaption(getShowPlaylistMsg(playlist), {
         parse_mode: 'HTML',
@@ -276,6 +276,15 @@ export class ManagePlaylistService {
     const totalCount: number = await this.trackRepo.getCountsByPlaylistId(
       ctx.playlist.id,
     );
+    if (!totalCount) {
+      await ctx.answerCbQuery(
+        '⚠️ پلی لیست شما خالی است! هیچ فایلی در آن وجود ندارد.',
+        {
+          show_alert: true,
+        },
+      );
+      return;
+    }
 
     const totalPages = Math.ceil(totalCount / perPage);
 

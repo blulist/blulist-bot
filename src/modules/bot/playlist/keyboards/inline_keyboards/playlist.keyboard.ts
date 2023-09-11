@@ -12,7 +12,7 @@ export const playlistKeyboard = (
       },
       {
         text: '🗃️ فایل ها',
-        callback_data: inlineCbKeys.SHOW_MY_FILES + `:${playlistSlug}`,
+        callback_data: inlineCbKeys.SHOW_MY_FILES + `:${playlistSlug}:1`,
       },
     ],
     [
