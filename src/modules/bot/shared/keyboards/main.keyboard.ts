@@ -12,13 +12,13 @@ export const mainMenuInlineKeyboards: InlineKeyboardButton[][] = [
       callback_data: inlineCbKeys.CREATE_PLAYLIST,
     },
   ],
-  [{ text: '🔎 اکسپلور', callback_data: 'soon' }],
   [
     { text: 'کانال ما', url: 'https://t.me/blulist_support' },
-    { text: '❤️ پسندیدها', callback_data: 'soon' },
-  ],
-  [
+    // { text: '❤️ پسندیدها', callback_data: 'soon' },
     { text: '🌐 وب اپلیکیشن', url: 'https://bluelist.ir' },
-    { text: '📺 آموزش', callback_data: 'soon' },
   ],
+  [{ text: '🔎 اکسپلور', url: 'https://bluelist.ir/playlists' }],
+  // [
+  // { text: '📺 آموزش', callback_data: 'soon' },
+  // ],
 ];
