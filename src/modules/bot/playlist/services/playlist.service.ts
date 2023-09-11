@@ -40,12 +40,12 @@ export class PlaylistService {
     );
 
     await ctx.answerCbQuery(msg, { show_alert: true });
-    await ctx.editMessageReplyMarkup({
-      inline_keyboard: userPlaylistKeyboard(
-        ctx.playlist as PlaylistWithTracks,
-        likeCounts,
-      ),
-    });
+    // await ctx.editMessageReplyMarkup({
+    //   inline_keyboard: userPlaylistKeyboard(
+    //     ctx.playlist as PlaylistWithTracks,
+    //     likeCounts,
+    //   ),
+    // });
 
     // add like
   }

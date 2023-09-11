@@ -100,7 +100,7 @@ export class ManagePlaylistService {
 
   async myPlaylists(ctx: Context, userId: number): Promise<void> {
     const page = Number(ctx.match[1]) || 1;
-    const perPage = 1;
+    const perPage = 8;
 
     const totalCount: number = await this.playlistRepo.getCountsByUserId(
       userId,
@@ -274,7 +274,38 @@ export class ManagePlaylistService {
     );
   }
   async showMyPlaylistFiles(ctx: Context) {
-    const files = await this.trackRepo.findAll(ctx.playlist.id);
+    const page = Number(ctx.match[2]) || 1;
+    const perPage = 1;
+
+    const totalCount: number = await this.trackRepo.getCountsByPlaylistId(
+      ctx.playlist.id,
+    );
+
+    const totalPages = Math.ceil(totalCount / perPage);
+
+    const paginationKeyboard: InlineKeyboardButton[] = [];
+    if (page > 1) {
+      paginationKeyboard.push({
+        text: '⭀ صفحه قبلی',
+        callback_data: `${inlineCbKeys.SHOW_MY_FILES}:${ctx.playlist.slug}:${
+          page - 1
+        }`,
+      });
+      paginationKeyboard.push({
+        text: '🏡',
+        callback_data: `${inlineCbKeys.SHOW_MY_FILES}:${ctx.playlist.slug}:1`,
+      });
+    }
+    if (page < totalPages) {
+      paginationKeyboard.push({
+        text: '⥱ صفحه بعدی',
+        callback_data: `${inlineCbKeys.SHOW_MY_FILES}:${ctx.playlist.slug}:${
+          page + 1
+        }`,
+      });
+    }
+
+    const files = await this.trackRepo.findAll(ctx.playlist.id, page, perPage);
 
     await ctx.deleteMessage();
     const buttons: InlineKeyboardButton[][] = files.map((f) => [
@@ -293,8 +324,11 @@ export class ManagePlaylistService {
         callback_data: `sendAllTracks:${ctx.playlist.slug}`,
       },
     ]);
+    buttons.push(paginationKeyboard);
+
     await ctx.sendMessage(
       `فایل های پلی لیست <b>${ctx.playlist.name}</b> با ایدی <code>${ctx.playlist.slug}</code>
+🗃️ تعداد فایل ها : ${totalCount}
 لطفا یک گزینه رو انتخاب کنید:
 `,
       {

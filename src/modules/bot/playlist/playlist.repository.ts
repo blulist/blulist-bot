@@ -25,6 +25,11 @@ export class PlaylistRepository {
       },
       include: {
         tracks: inclueTracks,
+        _count: {
+          select: {
+            likes: true,
+          },
+        },
       },
     });
   }
@@ -51,6 +56,13 @@ export class PlaylistRepository {
       },
       take: perPage,
       skip: (page - 1) * perPage,
+      include: {
+        _count: {
+          select: {
+            likes: true,
+          },
+        },
+      },
       orderBy: {
         createdAt: 'desc',
       },

@@ -12,11 +12,17 @@ export class TrackRepository {
     });
   }
 
-  findAll(playlistId: number): Promise<Array<Track>> {
+  findAll(
+    playlistId: number,
+    page: number,
+    perPage: number,
+  ): Promise<Array<Track>> {
     return this.db.track.findMany({
       where: {
         playlistId,
       },
+      take: perPage,
+      skip: (page - 1) * perPage,
       orderBy: {
         createdAt: 'desc',
       },
@@ -29,6 +35,15 @@ export class TrackRepository {
       },
     });
   }
+
+  getCountsByPlaylistId(playlistId: number): Promise<number> {
+    return this.db.track.count({
+      where: {
+        playlistId,
+      },
+    });
+  }
+
   deleteOneByUniqueId(uniqueId: string): Promise<Track> {
     return this.db.track.delete({
       where: { uniqueId },

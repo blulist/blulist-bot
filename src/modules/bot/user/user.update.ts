@@ -41,7 +41,7 @@ export class UserUpdate {
 
   @Action(/show_user_playlist:(.*):(.*)/)
   @UseGuards(CheckPlaylistGuard)
-  onShowPlaylist(@Ctx() ctx: Context) {
-    console.log(ctx.match);
+  async onShowPlaylist(@Ctx() ctx: Context) {
+    await this.userService.onTrackPagination(ctx);
   }
 }

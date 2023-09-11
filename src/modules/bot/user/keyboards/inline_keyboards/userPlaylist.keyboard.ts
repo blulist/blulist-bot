@@ -1,21 +1,22 @@
 import { InlineKeyboardButton } from '../../../shared/interfaces/keyboard.interface';
-import { PlaylistWithTracks } from '../../../shared/interfaces/playlist.interface';
+import { Track } from '../../../shared/interfaces/track.interface';
 
 export const userPlaylistKeyboard = (
-  playlist: PlaylistWithTracks,
+  playlistSlug: string,
+  tracks: Array<Track>,
   likeCounts: number,
 ): InlineKeyboardButton[][] => {
-  const files: InlineKeyboardButton[][] = playlist.tracks.map((tr) => [
+  const files: InlineKeyboardButton[][] = tracks.map((tr) => [
     {
       text: `${tr.title} • ${tr.performer}`,
-      callback_data: `selectTrack:${playlist.slug}:${tr.uniqueId}`,
+      callback_data: `selectTrack:${playlistSlug}:${tr.uniqueId}`,
     },
   ]);
-  if (playlist.tracks.length) {
+  if (tracks.length) {
     files.unshift([
       {
         text: '📤 آپلود همه فایلها',
-        callback_data: `sendAllTracks:${playlist.slug}`,
+        callback_data: `sendAllTracks:${playlistSlug}`,
       },
     ]);
   }
@@ -27,7 +28,7 @@ export const userPlaylistKeyboard = (
       },
       {
         text: `❤️ ${likeCounts}`,
-        callback_data: `likePlaylist:${playlist.slug}`,
+        callback_data: `likePlaylist:${playlistSlug}`,
       },
     ],
 

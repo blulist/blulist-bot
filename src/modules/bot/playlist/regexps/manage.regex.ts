@@ -19,7 +19,7 @@ export const editPlaylistStatusRegex = new RegExp(
 );
 export const backToMainPlaylistRegex = new RegExp(`backTo:mainPlaylist:(.*)$`);
 export const showMyPlaylistFilesRegex = new RegExp(
-  `^${inlineCbKeys.SHOW_MY_FILES}:(.*)$`,
+  `^${inlineCbKeys.SHOW_MY_FILES}:(.*):(.*)$`,
 );
 export const sharePlaylistRegex = new RegExp(
   `^${inlineCbKeys.SHARE_PLAYLIST}:(.*)$`,
