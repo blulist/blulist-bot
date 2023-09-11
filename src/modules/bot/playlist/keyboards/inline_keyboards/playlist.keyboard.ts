@@ -21,13 +21,7 @@ export const playlistKeyboard = (
         callback_data: inlineCbKeys.SHARE_PLAYLIST + `:${playlistSlug}`,
       },
       {
-        text: 'آمار',
-        callback_data: 'amar_playlist',
-      },
-    ],
-    [
-      {
-        text: '🗑️ حذف',
+        text: '🔻 حذف',
         callback_data: inlineCbKeys.DELETE_PLAYLIST + `:${playlistSlug}`,
       },
     ],
