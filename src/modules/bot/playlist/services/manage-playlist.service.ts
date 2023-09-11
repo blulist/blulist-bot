@@ -37,10 +37,8 @@ export class ManagePlaylistService {
       name: playlistName,
       ownerId: senderId,
     });
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    playlist.tracks = [];
-    await ctx.reply(getShowPlaylistMsg(playlist as any), {
+
+    await ctx.reply(getShowPlaylistMsg(playlist), {
       parse_mode: 'HTML',
       reply_markup: {
         inline_keyboard: playlistKeyboard(uuId),

@@ -12,8 +12,18 @@ import {
 export class PlaylistRepository {
   constructor(private db: PrismaService) {}
 
-  create(input: PlaylistCreateInput): Promise<Playlist> {
-    return this.db.playlist.create({ data: input });
+  create(input: PlaylistCreateInput): Promise<PlaylistWithCounts> {
+    return this.db.playlist.create({
+      data: input,
+      include: {
+        _count: {
+          select: {
+            likes: true,
+            tracks: true,
+          },
+        },
+      },
+    });
   }
   findBySlug(
     slug: string,
@@ -24,10 +34,10 @@ export class PlaylistRepository {
         slug,
       },
       include: {
-        tracks: includeCounts,
         _count: {
           select: {
             likes: true,
+            tracks: true,
           },
         },
       },
@@ -57,6 +67,7 @@ export class PlaylistRepository {
         _count: {
           select: {
             likes: true,
+            tracks: true,
           },
         },
       },
