@@ -13,6 +13,5 @@ export class SendPlnameScenes {
     @Sender('id') senderId: number,
   ) {
     await this.playlistService.create(ctx, { playlistName, senderId });
-    await ctx.scene.leave();
   }
 }

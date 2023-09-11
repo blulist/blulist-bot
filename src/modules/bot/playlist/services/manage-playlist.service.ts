@@ -17,9 +17,15 @@ import {
 } from '../../shared/interfaces/playlist.interface';
 import { getRandomString } from '../../../../shared/utils/random.util';
 import { InlineKeyboardButton } from '../../shared/interfaces/keyboard.interface';
-import { getShowPlaylistMsg } from '../messages/showPlaylist.msg';
+import {
+  getErrorValidatePlaylistName,
+  getShowPlaylistMsg,
+} from '../messages/showPlaylist.msg';
 import { mainMenuInlineKeyboards } from '../../shared/keyboards/main.keyboard';
 import { inlineCbKeys } from '../../shared/constants/callbacks.constant';
+import { BotInfo } from '../../shared/constants/bot.constant';
+import { isValidPlaylistName } from '../../../../shared/validators/string.validate';
+import { CancelKeyboard } from '../../shared/keyboards/cancel.keyboard';
 @Injectable()
 export class ManagePlaylistService {
   constructor(
@@ -31,21 +37,34 @@ export class ManagePlaylistService {
     ctx: Context,
     { playlistName, senderId }: { playlistName: string; senderId: number },
   ) {
+    if (!isValidPlaylistName(playlistName)) {
+      await ctx.reply(getErrorValidatePlaylistName(), {
+        reply_to_message_id: ctx.message.message_id,
+        reply_markup: {
+          inline_keyboard: CancelKeyboard,
+        },
+      });
+      return;
+    }
+
     const uuId = crypto.randomUUID().slice(0, 8);
     const playlist = await this.playlistRepo.create({
       slug: uuId,
       name: playlistName,
       ownerId: senderId,
     });
-
-    await ctx.reply(getShowPlaylistMsg(playlist), {
+    const msg = `• پلی لیست با موفقیت ساخته شد ✅
+${getShowPlaylistMsg(playlist)}`;
+    await ctx.reply(msg, {
       parse_mode: 'HTML',
       reply_markup: {
         inline_keyboard: playlistKeyboard(uuId),
         selective: true,
         one_time_keyboard: true,
       },
+      reply_to_message_id: ctx.message.message_id,
     });
+    await ctx.scene.leave();
   }
 
   async addTrack(ctx: Context, redisKey: string): Promise<string> {
@@ -196,10 +215,15 @@ export class ManagePlaylistService {
   }
 
   async editPlaylistName(ctx: Context, playlistSlug: string, newName: string) {
-    if (newName.length > 30)
-      return await ctx.reply('❌ بیشتر از 30 کاراکتر نباید باشد.', {
+    if (!isValidPlaylistName(newName)) {
+      await ctx.reply(getErrorValidatePlaylistName(), {
         reply_to_message_id: ctx.message.message_id,
+        reply_markup: {
+          inline_keyboard: CancelKeyboard,
+        },
       });
+      return;
+    }
     await this.playlistRepo.updateBySlug(playlistSlug, {
       name: newName,
     });

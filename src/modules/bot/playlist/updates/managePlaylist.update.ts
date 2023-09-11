@@ -19,6 +19,7 @@ import { CheckPlaylistGuard } from '../../shared/guards/checkplaylist.guard';
 import { ExceptionsFilter } from '../../shared/filters/exceptions.filter';
 import { LoggingInterceptor } from '../../shared/interceptors/logging.interceptor';
 import { BotInfo } from '../../shared/constants/bot.constant';
+import { CancelKeyboard } from '../../shared/keyboards/cancel.keyboard';
 
 @Update()
 @UseFilters(ExceptionsFilter)
@@ -32,7 +33,7 @@ export class ManagePlaylistUpdate {
     if (text == '/create') {
       await ctx.sendMessage('اسم مورد نظر رو وارد کنید...', {
         reply_markup: {
-          inline_keyboard: [[{ text: 'لغو', callback_data: 'cancel' }]],
+          inline_keyboard: CancelKeyboard,
         },
       });
     } else
