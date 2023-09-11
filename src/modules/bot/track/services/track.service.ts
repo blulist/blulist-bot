@@ -45,6 +45,7 @@ ${BotInfo.FooterMessages}
     });
   }
   async sendAllTracks(ctx: Context, userId: number) {
+    const page = Number(ctx.match[2]) || 1;
     const playlist = ctx.playlist as PlaylistWithCounts;
     const isAdmin = Number(playlist.ownerId) === userId;
     if (!playlist._count.tracks) {
@@ -54,26 +55,25 @@ ${BotInfo.FooterMessages}
       return;
     }
     await ctx.answerCbQuery('درحال ارسال فایل ها...');
+    const tracks = await this.trackRepo.findAll(playlist.id, page, 8);
+    for (const track of tracks) {
+      const buttons: InlineKeyboardButton[][] = [[]];
+      if (isAdmin) {
+        buttons.push([
+          {
+            text: 'حذف  فایل از پلی لیست',
+            callback_data: `removeTrack:${ctx.playlist.slug}:${track.uniqueId}`,
+          },
+        ]);
+      }
 
-    //todo
-    // for (const track of playlist.tracks) {
-    //   const buttons: InlineKeyboardButton[][] = [[]];
-    //   if (isAdmin) {
-    //     buttons.push([
-    //       {
-    //         text: 'حذف  فایل از پلی لیست',
-    //         callback_data: `removeTrack:${ctx.playlist.slug}:${track.uniqueId}`,
-    //       },
-    //     ]);
-    //   }
-    //
-    //   await ctx.sendChatAction('upload_document');
-    //
-    //   await ctx.sendAudio(track.file_id, {
-    //     reply_markup: { inline_keyboard: buttons },
-    //     caption: BotInfo.FooterMessages,
-    //     parse_mode: 'HTML',
-    //   });
-    // }
+      await ctx.sendChatAction('upload_document');
+
+      await ctx.sendAudio(track.file_id, {
+        reply_markup: { inline_keyboard: buttons },
+        caption: BotInfo.FooterMessages,
+        parse_mode: 'HTML',
+      });
+    }
   }
 }

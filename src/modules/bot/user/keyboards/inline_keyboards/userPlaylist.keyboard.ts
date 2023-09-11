@@ -5,6 +5,7 @@ export const userPlaylistKeyboard = (
   playlistSlug: string,
   tracks: Array<Track>,
   likeCounts: number,
+  currentPage: number,
 ): InlineKeyboardButton[][] => {
   const files: InlineKeyboardButton[][] = tracks.map((tr) => [
     {
@@ -16,7 +17,7 @@ export const userPlaylistKeyboard = (
     files.unshift([
       {
         text: '📤 آپلود همه فایلها',
-        callback_data: `sendAllTracks:${playlistSlug}`,
+        callback_data: `sendAllTracks:${playlistSlug}:${currentPage}`,
       },
     ]);
   }

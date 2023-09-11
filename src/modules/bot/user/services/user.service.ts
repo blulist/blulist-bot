@@ -64,7 +64,12 @@ ${BotInfo.FooterMessages}
     );
 
     const tracks = await this.tracksRepo.findAll(playlist.id, 1, perPage);
-    const keyboard = userPlaylistKeyboard(playlist.slug, tracks, likeCounts);
+    const keyboard = userPlaylistKeyboard(
+      playlist.slug,
+      tracks,
+      likeCounts,
+      page,
+    );
 
     if (page < totalPages) {
       keyboard.push([
@@ -132,6 +137,7 @@ ${BotInfo.FooterMessages}
       ctx.playlist.slug,
       files,
       ctx.playlist._count.likes,
+      page,
     );
     keyboard.push(paginationKeyboard);
     await ctx.editMessageReplyMarkup({

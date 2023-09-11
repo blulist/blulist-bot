@@ -295,7 +295,7 @@ ${getShowPlaylistMsg(playlist)}`;
   }
   async showMyPlaylistFiles(ctx: Context) {
     const page = Number(ctx.match[2]) || 1;
-    const perPage = 1;
+    const perPage = 8;
 
     const totalCount: number = await this.trackRepo.getCountsByPlaylistId(
       ctx.playlist.id,
@@ -320,12 +320,13 @@ ${getShowPlaylistMsg(playlist)}`;
           page - 1
         }`,
       });
-      paginationKeyboard.push({
-        text: '🏡',
-        callback_data: `${inlineCbKeys.SHOW_MY_FILES}:${ctx.playlist.slug}:1`,
-      });
     }
     if (page < totalPages) {
+      if (page !== 1)
+        paginationKeyboard.push({
+          text: '🏡',
+          callback_data: `${inlineCbKeys.SHOW_MY_FILES}:${ctx.playlist.slug}:1`,
+        });
       paginationKeyboard.push({
         text: '⥱ صفحه بعدی',
         callback_data: `${inlineCbKeys.SHOW_MY_FILES}:${ctx.playlist.slug}:${
@@ -349,8 +350,8 @@ ${getShowPlaylistMsg(playlist)}`;
         callback_data: `backTo:mainPlaylist:${ctx.playlist.slug}`,
       },
       {
-        text: 'ارسال همه',
-        callback_data: `sendAllTracks:${ctx.playlist.slug}`,
+        text: `ارسال همه (${files.length})`,
+        callback_data: `sendAllTracks:${ctx.playlist.slug}:${page}`,
       },
     ]);
     buttons.push(paginationKeyboard);
