@@ -117,7 +117,7 @@ https://t.me/${BotInfo.UsernameWithoutPerfix}?start=${slug}
 
 <b>🌐 و برای سایت:</b>
 
-https://blulist.ir/playlists/${slug}
+🔜 به زوودی
  
 
 ${BotInfo.FooterMessages}

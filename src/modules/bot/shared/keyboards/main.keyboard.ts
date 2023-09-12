@@ -13,11 +13,11 @@ export const mainMenuInlineKeyboards: InlineKeyboardButton[][] = [
     },
   ],
   [
-    { text: 'کانال ما', url: 'https://t.me/blulist_support' },
+    { text: '🔗 کانال پشتیبانی', url: 'https://t.me/blulist_support' },
     // { text: '❤️ پسندیدها', callback_data: 'soon' },
-    { text: '🌐 وب اپلیکیشن', url: 'https://bluelist.ir' },
+    // { text: '🌐 وب اپلیکیشن', url: 'https://bluelist.ir' },
   ],
-  [{ text: '🔎 اکسپلور', url: 'https://bluelist.ir/playlists' }],
+  // [{ text: '🔎 اکسپلور', url: 'https://bluelist.ir/playlists' }],
   // [
   // { text: '📺 آموزش', callback_data: 'soon' },
   // ],
