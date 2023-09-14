@@ -8,6 +8,7 @@ import { Observable, tap } from 'rxjs';
 import { LoggingService } from '../../../logging/logging.service';
 import { TelegrafArgumentsHost } from 'nestjs-telegraf';
 import { Context } from '../interfaces/context.interface';
+import * as process from 'process';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
@@ -17,6 +18,7 @@ export class LoggingInterceptor implements NestInterceptor {
     const ctx = telegrafHost.getContext<Context>();
     return next.handle().pipe(
       tap(() => {
+        if (process.env.dev) return;
         try {
           let msg = `new request\n\n`;
           if (ctx.callbackQuery) {

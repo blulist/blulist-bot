@@ -47,14 +47,13 @@ export class UserService {
     const newPlaylist = await this.playlistRepo.updateViewCount(playlist.slug);
     playlist.viewCount = newPlaylist.viewCount;
     const content = `
-اسم پلی لیست:  <b>${playlist.name}</b>
-آیدی یونیک: <code>${playlist.slug}</code>
+اسم پلی لیست:  *${playlist.name}*
 ↲ تعداد فایل ها: ${playlist._count.tracks}
 ↲ تعداد بازدید: ${playlist.viewCount}
 
 
-<b>شما هم میتونید با ${BotInfo.NameFa} پلی لیست های خودتون رو داشته و به اشتراک بگذارید !
-برای شروع /start رو بزنید</b>
+*شما هم میتونید با ${BotInfo.NameFa} پلی لیست های خودتون رو داشته و به اشتراک بگذارید !
+برای شروع /start رو بزنید*
 
 ${BotInfo.FooterMessages}
 `;
@@ -88,7 +87,7 @@ ${BotInfo.FooterMessages}
           resize_keyboard: true,
           one_time_keyboard: true,
         },
-        parse_mode: 'HTML',
+        parse_mode: 'Markdown',
         caption: content,
       });
     } else {
@@ -98,7 +97,7 @@ ${BotInfo.FooterMessages}
           resize_keyboard: true,
           one_time_keyboard: true,
         },
-        parse_mode: 'HTML',
+        parse_mode: 'Markdown',
       });
     }
   }

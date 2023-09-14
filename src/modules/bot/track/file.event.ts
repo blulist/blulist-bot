@@ -20,7 +20,7 @@ export class FileEvent {
     const playlists = await this.playlistRepo.findAllByUserId(ctx.from.id, 1);
     const btns: InlineKeyboardButton[][] = playlists.map((pl) => [
       {
-        text: `${pl.name} - ${pl.slug}`,
+        text: `${pl.name}`,
         callback_data: `select_playlist:${pl.slug}:${key}`,
       },
     ]);
@@ -33,6 +33,7 @@ export class FileEvent {
         reply_markup: {
           inline_keyboard: btns,
         },
+        parse_mode: 'Markdown',
         reply_to_message_id: ctx.message.message_id,
       },
     );

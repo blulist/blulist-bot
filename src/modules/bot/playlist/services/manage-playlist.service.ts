@@ -112,10 +112,10 @@ ${getShowPlaylistMsg(playlist)}`;
       uniqueId: getRandomString(10),
       thumbnail: thumbnail ? thumbnail.file_id || '' : '',
     });
-    const text = ` ✅ فایل <code>${track.performer}</code> با موفقیت به پلی لیست <u>${playlist.name}</u> با ایدی <code>${playlist.slug}</code> اضافه شد.`;
+    const text = `فایل  \` ${track.performer}  \` بـا موفقیت به پلی لیسـت * ${playlist.name} * اضـافه شد.`;
 
     await ctx.editMessageText(text, {
-      parse_mode: 'HTML',
+      parse_mode: 'Markdown',
       reply_markup: {
         inline_keyboard: mainMenuInlineKeyboards,
       },
@@ -170,7 +170,7 @@ ${getShowPlaylistMsg(playlist)}`;
 
     const keyboards: InlineKeyboardButton[][] = playlists.map((pl) => [
       {
-        text: `${pl.isPrivate ? '🔐' : '🔓'}〡${pl.name}〡${pl.slug}`,
+        text: `${pl.isPrivate ? '🔐' : '🔓'}〡${pl.name}`,
         callback_data: `show_playlist:${pl.slug}`,
       },
     ]);
@@ -365,7 +365,7 @@ ${getShowPlaylistMsg(playlist)}`;
     buttons.push(paginationKeyboard);
 
     await ctx.sendMessage(
-      `فایل های پلی لیست *${ctx.playlist.name}* با ایدی \`${ctx.playlist.slug}\`
+      `فایل های پلی لیست *${ctx.playlist.name}* 
 🗃️ تعداد فایل ها : ${totalCount}
 لطفا یک گزینه رو انتخاب کنید:
 `,
