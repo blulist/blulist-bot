@@ -25,6 +25,18 @@ export class PlaylistRepository {
       },
     });
   }
+
+  getDuplicateNamesCount(name: string, userId: number): Promise<number> {
+    return this.db.playlist.count({
+      where: {
+        name: {
+          startsWith: name,
+        },
+        ownerId: userId,
+      },
+    });
+  }
+
   findBySlug(
     slug: string,
     includeCounts = false,

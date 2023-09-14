@@ -1,5 +1,8 @@
 //https://github.com/amirshnll/Persian-Swear-Words/blob/master/PersianSwear.js
 const words = [
+  '/start',
+  '/create',
+  '/privacy',
   'آب کیر',
   'آشغال',
   'آلت تناسلی',

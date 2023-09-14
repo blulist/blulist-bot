@@ -47,16 +47,24 @@ export class ManagePlaylistService {
       return;
     }
 
+    const countDuplicates = await this.playlistRepo.getDuplicateNamesCount(
+      playlistName,
+      senderId,
+    );
+
+    if (countDuplicates) playlistName += ` (${countDuplicates + 1})`;
+
     const uuId = crypto.randomUUID().slice(0, 8);
     const playlist = await this.playlistRepo.create({
       slug: uuId,
       name: playlistName,
       ownerId: senderId,
     });
+
     const msg = `• پلی لیست با موفقیت ساخته شد ✅
 ${getShowPlaylistMsg(playlist)}`;
     await ctx.reply(msg, {
-      parse_mode: 'HTML',
+      parse_mode: 'Markdown',
       reply_markup: {
         inline_keyboard: playlistKeyboard(uuId),
         selective: true,
@@ -196,7 +204,7 @@ ${getShowPlaylistMsg(playlist)}`;
 
       await ctx.sendPhoto(banner.file_id, {
         caption: getShowPlaylistMsg(playlist),
-        parse_mode: 'HTML',
+        parse_mode: 'Markdown',
         reply_markup: {
           inline_keyboard: playlistKeyboard(playlist.slug),
           selective: true,
@@ -205,7 +213,7 @@ ${getShowPlaylistMsg(playlist)}`;
       });
     } else
       await ctx.sendMessage(getShowPlaylistMsg(playlist), {
-        parse_mode: 'HTML',
+        parse_mode: 'Markdown',
         reply_markup: {
           inline_keyboard: playlistKeyboard(playlist.slug),
           selective: true,
@@ -228,10 +236,10 @@ ${getShowPlaylistMsg(playlist)}`;
       name: newName,
     });
     await ctx.reply(
-      `• <b>${newName}</b> به عنوان نام جدید پلی لیست <code>${playlistSlug}</code> ثبت شد.`,
+      `• *${newName}* به عنوان نام جدید پلی لیست \`${playlistSlug}\` ثبت شد.`,
       {
         reply_to_message_id: ctx.message.message_id,
-        parse_mode: 'HTML',
+        parse_mode: 'Markdown',
         reply_markup: {
           inline_keyboard: backToMainMenuPlaylist(playlistSlug),
         },
@@ -252,9 +260,9 @@ ${getShowPlaylistMsg(playlist)}`;
       bannerId: newBannerId,
     });
     await ctx.reply(
-      `• بنر پلی لیست <b>${playlist.name}</b> با ایدی <code>${playlist.slug}</code> بروزرسانی شد.`,
+      `• بنر پلی لیست *${playlist.name}* با ایدی \`${playlist.slug}\` بروزرسانی شد.`,
       {
-        parse_mode: 'HTML',
+        parse_mode: 'Markdown',
         reply_to_message_id: ctx.message.message_id,
         reply_markup: {
           inline_keyboard: backToMainMenuPlaylist(playlistSlug),
@@ -277,14 +285,14 @@ ${getShowPlaylistMsg(playlist)}`;
     playlist.isPrivate = isPrivate;
     if (photo && photo.length) {
       await ctx.editMessageCaption(getShowPlaylistMsg(playlist), {
-        parse_mode: 'HTML',
+        parse_mode: 'Markdown',
         reply_markup: {
           inline_keyboard: editPlaylistKeyboard(playlist.slug),
         },
       });
     } else
       await ctx.editMessageText(getShowPlaylistMsg(playlist), {
-        parse_mode: 'HTML',
+        parse_mode: 'Markdown',
         reply_markup: {
           inline_keyboard: editPlaylistKeyboard(playlist.slug),
         },
@@ -357,12 +365,12 @@ ${getShowPlaylistMsg(playlist)}`;
     buttons.push(paginationKeyboard);
 
     await ctx.sendMessage(
-      `فایل های پلی لیست <b>${ctx.playlist.name}</b> با ایدی <code>${ctx.playlist.slug}</code>
+      `فایل های پلی لیست *${ctx.playlist.name}* با ایدی \`${ctx.playlist.slug}\`
 🗃️ تعداد فایل ها : ${totalCount}
 لطفا یک گزینه رو انتخاب کنید:
 `,
       {
-        parse_mode: 'HTML',
+        parse_mode: 'Markdown',
         reply_markup: {
           inline_keyboard: buttons,
         },
@@ -374,9 +382,9 @@ ${getShowPlaylistMsg(playlist)}`;
     try {
       await this.playlistRepo.deleteOneBySlug(ctx.playlist.slug);
       await ctx.editMessageText(
-        `✅  پلی لیست <b>${ctx.playlist.name}</b> با آیدی <code>${ctx.playlist.slug}</code> با موفقیت حذف گردید.`,
+        `✅  پلی لیست *${ctx.playlist.name}* با آیدی \`${ctx.playlist.slug}\` با موفقیت حذف گردید.`,
         {
-          parse_mode: 'HTML',
+          parse_mode: 'Markdown',
           reply_markup: {
             inline_keyboard: mainMenuInlineKeyboards,
           },
@@ -384,7 +392,7 @@ ${getShowPlaylistMsg(playlist)}`;
       );
     } catch (e) {
       await ctx.editMessageText(`خطا در حذف پلی لیست!`, {
-        parse_mode: 'HTML',
+        parse_mode: 'Markdown',
         reply_markup: {
           inline_keyboard: mainMenuInlineKeyboards,
         },

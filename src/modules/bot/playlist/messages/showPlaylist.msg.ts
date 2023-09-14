@@ -4,8 +4,7 @@ import { BotInfo } from '../../shared/constants/bot.constant';
 
 export function getShowPlaylistMsg(playlist: PlaylistWithCounts): string {
   return `
-اسم پلی لیست: ${playlist.name}
-آیدی یونیک: <code>${playlist.slug}</code>
+اسم پلی لیست: *${playlist.name}*
 ↲ آمار بازدید: ${playlist.viewCount}
 ↲ آمار لایک: ${playlist._count.likes}
 ↲ تعداد فایل ها: ${playlist._count.tracks}
